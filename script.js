@@ -62,6 +62,10 @@ const useMusic = () => {
   backgroundMusic.play();
 };
 
+const changeMusicVolume = () => {
+  
+};
+
 //Runs the code
 $("#play-button").click(useMusic);
 
