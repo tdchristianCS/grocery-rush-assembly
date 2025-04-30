@@ -5,6 +5,17 @@ const backgroundMusic = new Audio(
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
 
+//Open the load game screen
+const openPlayMenu = () => {
+  $('#playMenu').removeClass('hide');
+  $('#welcomeMenu').addClass('hide');
+}; 
+
+const closePlayMenu = () => {
+  $('#playMenu').addClass('hide');
+  $('#welcomeMenu').removeClass('hide');
+};
+
 //Opens the menu with things such as settings and instructions 
 const openHelpMenu = () => {
   $('#helpMenu').removeClass('hide');
@@ -25,15 +36,15 @@ const closeInstructions = () => {
   $('#helpMenu').removeClass('hide');
 };
 
-//Open the load game screen
-const openPlayMenu = () => {
-  $('#playMenu').removeClass('hide');
-  $('#welcomeMenu').addClass('hide');
-}; 
+//Open the settings menu 
+const openSettings = () => {
+  $('#settings').removeClass('hide');
+  $('#helpMenu').addClass('hide');
+};
 
-const closePlayMenu = () => {
-  $('#playMenu').addClass('hide');
-  $('#welcomeMenu').removeClass('hide');
+const closeSettings = () => {
+  $('#settings').addClass('hide');
+  $('#helpMenu').removeClass('hide');
 };
 
 //Plays the music by looping things around. 8 bit sound
@@ -54,3 +65,6 @@ $('#returnButton').click(closeInstructions);
 
 $('#play-button').click(openPlayMenu);
 $('#return-button').click(closePlayMenu);
+
+$('#settings-button').click(openSettings);
+$('#backtoMenu').click(closeSettings);
