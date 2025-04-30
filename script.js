@@ -41,10 +41,19 @@ const openSettings = () => {
   $('#settings').removeClass('hide');
   $('#helpMenu').addClass('hide');
 };
-
 const closeSettings = () => {
   $('#settings').addClass('hide');
   $('#helpMenu').removeClass('hide');
+};
+
+//Open the Sound Menu 
+const openSoundMenu = () => {
+  $('#soundControl').removeClass('hide');
+  $('#settings').addClass('hide');
+};
+const closeSoundMenu = () => {
+  $('#soundControl').addClass('hide');
+  $('#settings').removeClass('hide');
 };
 
 //Plays the music by looping things around. 8 bit sound
@@ -68,3 +77,6 @@ $('#return-button').click(closePlayMenu);
 
 $('#settings-button').click(openSettings);
 $('#backtoMenu').click(closeSettings);
+
+$('#soundButton').click(openSoundMenu);
+$('#returntoMenu').click(closeSoundMenu);

@@ -77,15 +77,16 @@
     </div>
     <!-- Settings Screen -->
     <div class="hide screen" id="settings">
-      <button class="button" id="soundButton">Volume</button>
+      <button class="button" id="soundButton">Sound</button>
       <button class="button" id="controls">Controls</button>
       <button class="button" id="backtoMenu">Close Settings</button>
     </div>
     <!--Sound Control Screen-->
-    <div class="hide screen" id="volumeControl">
-
+    <div class="hide screen" id="soundControl">
+      <input id="backgroundMusicVolume" type="range" min="0" max="100" step="1" 
+      value="100">Background Music Volume: <span id="volumeText">100</span>
+      <button class="button" id="returntoMenu">Close Sound Settings</button>
     </div>
-
 
   </div>
   <div id="'gameScreen" class="screen  hide">
