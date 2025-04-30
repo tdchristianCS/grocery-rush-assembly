@@ -1,0 +1,85 @@
+/* The styling here pertains to the opening screen mainly :)
+ */
+body {
+  margin: 0;
+  background-color: #FFEE8C;
+}
+
+.screen {
+  background-color: rgba(255,238,140);
+  box-sizing: border-box;
+  margin: 15px auto;
+  padding: 15px;
+  max-width: 700px;
+  width: calc(100vw - 30px);
+  height: calc(100vh - 30px);
+}
+
+h1, h4 {
+  text-align: center;
+  font-family: Courier New;
+}
+
+button {
+  background-color: rgba(209,34,62);
+  border: none;
+  outline: none;
+  border-radius: 19px;
+  box-shadow: 3px 3px 7px black;
+  font-size: 24px;
+  display: block;
+  margin: 10px auto;
+  min-height: 70px;
+  width: 100%;
+  font-family: Courier New;
+}
+
+button:hover, button:active {
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(1.2);
+}
+
+button:active {
+  filter:brightness(0.8);
+}
+
+.highlight {
+  background-color: green;
+  color: white;
+}
+
+img {
+  min-width:10%;
+  max-width:50%;
+  padding: 20px; 
+}
+
+.flex-row {
+  display: flex;
+flex-direction: row;
+justify-content: center;
+}
+
+.flex-col {
+display: flex;
+flex-direction: column;
+justify-content: center;
+}
+
+a {
+  flex-shrink: 1;
+  display: block;
+}
+
+.hide {
+  display: none;
+  visibility: hidden;
+}
+
+h3, p {
+  text-align: center;
+  font-family: Courier New;
+}
