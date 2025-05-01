@@ -83,3 +83,19 @@ h3, p {
   text-align: center;
   font-family: Courier New;
 }
+
+.volumeSlider{
+  display:flex;
+  width:100%;
+  padding-top:5;
+  height: fit-content;
+}
+
+#volumeRange{
+  position: relative;
+  margin-top: 5px;
+  border-radius: 2px;
+  width:153px;
+  height: 5px;
+  -webkit-appearance: none;  /* Tool from CSS -webkit-appearance by GeeksforGeeks */
+}
