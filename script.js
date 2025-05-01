@@ -61,9 +61,13 @@ const useMusic = () => {
   backgroundMusic.play();
 };
 
-const changeVolume = () => {
-
-};
+//Controls the volume
+$("#volumeRange").change((e) => {
+  $("#volumeRangeVal").text(e.target.value);
+});
+$(document).ready(() => {
+  $(".volumeSlider").change();
+});
 
 //Runs the code
 $("#play-button").click(useMusic);
