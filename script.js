@@ -56,10 +56,13 @@ const closeSoundMenu = () => {
   $('#settings').removeClass('hide');
 };
 
-//Plays the music by looping things around. 8 bit sound
 const useMusic = () => {
   console.log("Sound Succesfull");
   backgroundMusic.play();
+};
+
+const changeVolume = () => {
+
 };
 
 //Runs the code
