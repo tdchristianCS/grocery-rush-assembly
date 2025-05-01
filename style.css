@@ -97,5 +97,5 @@ h3, p {
   border-radius: 2px;
   width:153px;
   height: 5px;
-  -webkit-appearance: none;  /* Tool from CSS -webkit-appearance by GeeksforGeeks */
+  -webkit-appearance: none;  /* Tool from https://www.geeksforgeeks.org/css-webkit-appearance/ */
 }
