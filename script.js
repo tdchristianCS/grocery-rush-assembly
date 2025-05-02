@@ -62,6 +62,7 @@ const useMusic = () => {
 };
 
 //Controls the volume
+// "This" tool from https://www.w3schools.com/js/js_this.asp
 $(document).ready(function(){
   var rangeSlider = function(){
       var slider = $('.range-slider'),
