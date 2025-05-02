@@ -83,6 +83,7 @@ h3, p {
   font-family: Courier New;
 }
 
+/* This crazy all for the slider  */
 .range-slider{
   padding: 15px 60px 7px 0;
   margin: 10px 0 0 0;
@@ -143,3 +144,4 @@ h3, p {
   background: transparent;
   border: 0;
 }
+/* Slider Finished */
