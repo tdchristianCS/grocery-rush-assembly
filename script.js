@@ -62,11 +62,23 @@ const useMusic = () => {
 };
 
 //Controls the volume
-$("#volumeRange").change((e) => {
-  $("#volumeRangeVal").text(e.target.value);
-});
-$(document).ready(() => {
-  $(".volumeSlider").change();
+$(document).ready(function(){
+  var rangeSlider = function(){
+      var slider = $('.range-slider'),
+          range = $('.range-slider input[type="range"]'),
+          value = $('.range-value');
+      slider.each(function(){
+          value.each(function(){
+              var value = $(this).prev().attr('value');
+              var max = $(this).prev().attr('max');
+              $(this).html(value);
+          });
+          range.on('input', function(){
+              $(this).next(value).html(this.value);
+          });
+      });
+  };
+  rangeSlider();
 });
 
 //Runs the code
