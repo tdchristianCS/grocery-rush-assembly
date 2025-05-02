@@ -52,8 +52,7 @@ button:active {
 }
 
 img {
-  min-width:30%;
-  max-width:50%;
+  width:370px;
   padding: 20px; 
 }
 
