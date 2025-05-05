@@ -73,6 +73,7 @@ $(document).ready(function(){
   $('#volume').change(handleVolumeUpdate);
 });
 
+
 //Runs the code
 $("#play-button").click(useMusic);
 

@@ -138,9 +138,10 @@ h3, p {
   text-align: center;
   width: 45px;
   padding: 3px 0;
-  /* position: absolute; */
+  position: relative;
   bottom: 8px;
   right: 5px;
+  height: 20px;
 }
 ::-moz-range-track{
   background: transparent;
