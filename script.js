@@ -61,25 +61,16 @@ const useMusic = () => {
   backgroundMusic.play();
 };
 
+
 //Controls the volume
-// "This" tool from https://www.w3schools.com/js/js_this.asp
+const handleVolumeUpdate = (e) => {
+  let value = parseInt(e.target.value);
+  $('#volume-display').text(value);
+  backgroundMusic.volume = value / 100;
+}
+
 $(document).ready(function(){
-  var rangeSlider = function(){
-      var slider = $('.range-slider'),
-          range = $('.range-slider input[type="range"]'),
-          value = $('.range-value');
-      slider.each(function(){
-          value.each(function(){
-              var value = $(this).prev().attr('value');
-              var max = $(this).prev().attr('max');
-              $(this).html(value);
-          });
-          range.on('input', function(){
-              $(this).next(value).html(this.value);
-          });
-      });
-  };
-  rangeSlider();
+  $('#volume').change(handleVolumeUpdate);
 });
 
 //Runs the code

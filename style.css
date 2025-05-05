@@ -87,7 +87,9 @@ h3, p {
 .range-slider{
   padding: 15px 60px 7px 0;
   margin: 10px 0 0 0;
-  position: relative;
+  /* position: relative; */
+  display: flex;
+  flex-direction: row;
 }
 .range-slider input[type="range"]{
   background: linear-gradient(178deg,transparent 49%,rgba(0,0,0,0.1) 51%);
@@ -128,7 +130,7 @@ h3, p {
 .range-slider input[type="range"]:active::-moz-range-thumb{
   box-shadow: 0 0 8px -3px #000 inset;
 }
-.range-slider .range-value{
+.range-value{
   color: #fff;
   background: rgba(209,34,62);
   font-size: 18px;
@@ -136,7 +138,7 @@ h3, p {
   text-align: center;
   width: 45px;
   padding: 3px 0;
-  position: absolute;
+  /* position: absolute; */
   bottom: 8px;
   right: 5px;
 }
