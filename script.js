@@ -73,6 +73,15 @@ $(document).ready(function(){
   $('#volume').change(handleVolumeUpdate);
 });
 
+//Mutes bgMusic
+const muteSound = () => {
+  if ($('#muteSound')).is('clicked')
+  {
+    backgroundMusic.volume = 0;
+  }
+}
+$('#muteSound').change(muteSound);
+
 
 //Runs the code
 $("#play-button").click(useMusic);
