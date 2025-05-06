@@ -1,7 +1,6 @@
 const backgroundMusic = new Audio(
   "https://t.sawczak.com/misc_assets/ics-hosting/jc-001.mp3"
 ); // Music by Krzysztof Szymanski sourced from Pixaby
-
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
 
@@ -19,7 +18,7 @@ const closePlayMenu = () => {
   $('#welcomeMenu').removeClass('hide');
 };
 
-//Opens the menu with things such as settings and instructions
+//Opens and Closes the menu with things such as settings and instructions
 const openHelpMenu = () => {
   $('#helpMenu').removeClass('hide');
   $('#welcomeMenu').addClass('hide');
@@ -29,7 +28,7 @@ const closeHelpMenu = () => {
   $('#welcomeMenu').removeClass('hide');
 };
 
-//Opens the instructions screen
+//Opens and Closes the instructions screen
 const openInstructions = () => {
   $('#instructions').removeClass('hide');
   $('#helpMenu').addClass('hide');
@@ -39,7 +38,7 @@ const closeInstructions = () => {
   $('#helpMenu').removeClass('hide');
 };
 
-//Open the settings menu
+//Opens and Closes the settings menu
 const openSettings = () => {
   $('#settings').removeClass('hide');
   $('#helpMenu').addClass('hide');
@@ -49,7 +48,7 @@ const closeSettings = () => {
   $('#helpMenu').removeClass('hide');
 };
 
-//Open the Sound Menu
+//Opens and Closes the Sound Menu
 const openSoundMenu = () => {
   $('#soundControl').removeClass('hide');
   $('#settings').addClass('hide');
@@ -59,6 +58,7 @@ const closeSoundMenu = () => {
   $('#settings').removeClass('hide');
 };
 
+// Tests music and prints a value to show if it was successful
 const useMusic = () => {
   console.log("Sound Succesfull");
   backgroundMusic.play();
@@ -72,7 +72,6 @@ const handleVolumeUpdate = (e) => {
   backgroundMusic.volume = value / 100;
   musicLastVolume = value / 100;
 }
-
 $(document).ready(function(){
   $('#volume').change(handleVolumeUpdate);
 });
@@ -101,10 +100,12 @@ const show = (el) => {
 const openGame = () => {
   hide($('#startScreen'));
   show($('#gameScreen'));
+  $('body').css('background', 'rgba(193,155,138,1)');
 };
 
+
 //Runs the code
-$("#play-button").click(useMusic);
+$("#play-button").click(useMusic)
 
 $('#menu-button').click(openHelpMenu);
 $('#menu-close').click(closeHelpMenu);

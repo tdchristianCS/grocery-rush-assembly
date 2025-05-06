@@ -2,14 +2,14 @@
  */
 body {
   margin: 0;
-  background-color: #FFEE8C;
+  background-color: black;
 
   --screen-w: calc(100vw - 30px);
   --screen-h: calc(100vh - 30px);
 }
 
 .screen {
-  background-color: rgba(255,238,140);
+  background-color: black;
   box-sizing: border-box;
   margin: 15px auto;
   padding: 15px;
@@ -55,8 +55,15 @@ button:active {
 }
 
 img {
-  width:370px;
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  margin: 1px auto;
   padding: 1px;
+  background-size: var(--screen-w) var(--screen-h);
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .flex-row {
@@ -156,7 +163,8 @@ h3, p {
 /* game */
 
 #backgroundLayer {
-  background: url("https://media-hosting.imagekit.io/381c8ef97c5b47ab/grocerybackground%20(1).jpg?Expires=1841148950&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=mxaVtKTUxb0kTwQYsbduT8mOxmv-~LubNeOCXifeIfWvg9SJP7tOAmLWN7ZEDMUPd1IiPlyScboYLqO703KzWRdfHz9eY5tJ10N3AlX8nHHGntmCeVBHUylggtQtPNv5Q2dMs21KmMeqbMKzcgid8cDlaJCJtCpOl0laho8a1CHpDeTV4CcOoKOEtrGSO~WEXUwokFZK8cFOMhrAsmFUJSMgT41oMJXLxChAOCzNPXTcA8zkkSHBG7T69SJZliIi3HJCAZFgu1lcWokXYiAhiJqXx3-qMTqpqsOOPXZEX70D0bbowj2twj~fmSm8Bf26n5VmoW5zYNdYrvjRbD2kRg__");
+  background: url("https://media-hosting.imagekit.io/2fbc4db29a494b48/storeimg%20(1).jpg?Expires=1841157820&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=iB8mMykhDi~P0Ft7jlPUZQF4hW5i8AGNK7B3gVpYYvqXl5LMFScVAkXurc2lZeQDZ7PMcJxAVgUGYathbwL-5Kw0PmrSyoDCGVLgcXWwMgs1MJ6jYr1Io3QtLVnUjsBTXL33Wz8kY88JMAdOH7WTrt9zk1A4M5NJmUzrwEkKpn2cK4tcTfnfVnicaMCUcfsRn9f1XCBUk1zkLQ4-Xmj0sABSs7e~IBedb1tRF71EuSktilBYWy4hIPV1KRPTafnBThciQajMK86QiJiN6NJwz5P3n1oOJQ3hBuHWUEOZhONt-11dVYALsQ6x972EQygHKFB4nnaa7WRMeYsV3eToKg__");
+  /*backgroundIMG from game Don't Give Up (https://gamejolt.com/games/dontgiveup/354865 )*/
   box-sizing: border-box;
   background-repeat: no-repeat;
   margin: 1px auto;
