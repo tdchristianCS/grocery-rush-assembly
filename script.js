@@ -97,7 +97,7 @@ const hide = (el) => {
 const show = (el) => {
   el.removeClass('hide');
 }
-//Open the Sound Menu
+//Open the Game Panel
 const openGame = () => {
   hide($('#startScreen'));
   show($('#gameScreen'));
