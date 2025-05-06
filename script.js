@@ -5,18 +5,21 @@ const backgroundMusic = new Audio(
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
 
+let musicLastVolume = backgroundMusic.volume;
+let musicIsMuted = false;
+
 //Open the load game screen
 const openPlayMenu = () => {
   $('#playMenu').removeClass('hide');
   $('#welcomeMenu').addClass('hide');
-}; 
+};
 
 const closePlayMenu = () => {
   $('#playMenu').addClass('hide');
   $('#welcomeMenu').removeClass('hide');
 };
 
-//Opens the menu with things such as settings and instructions 
+//Opens the menu with things such as settings and instructions
 const openHelpMenu = () => {
   $('#helpMenu').removeClass('hide');
   $('#welcomeMenu').addClass('hide');
@@ -36,7 +39,7 @@ const closeInstructions = () => {
   $('#helpMenu').removeClass('hide');
 };
 
-//Open the settings menu 
+//Open the settings menu
 const openSettings = () => {
   $('#settings').removeClass('hide');
   $('#helpMenu').addClass('hide');
@@ -46,7 +49,7 @@ const closeSettings = () => {
   $('#helpMenu').removeClass('hide');
 };
 
-//Open the Sound Menu 
+//Open the Sound Menu
 const openSoundMenu = () => {
   $('#soundControl').removeClass('hide');
   $('#settings').addClass('hide');
@@ -67,6 +70,7 @@ const handleVolumeUpdate = (e) => {
   let value = parseInt(e.target.value);
   $('#volume-display').text(value);
   backgroundMusic.volume = value / 100;
+  musicLastVolume = value / 100;
 }
 
 $(document).ready(function(){
@@ -74,14 +78,30 @@ $(document).ready(function(){
 });
 
 //Mutes bgMusic
-const muteSound = () => {
-  if ($('#muteSound')).is('clicked')
-  {
+const toggleMuteMusic = () => {
+  if (musicIsMuted) {
+    musicIsMuted = false;
+    backgroundMusic.volume = musicLastVolume;
+    $('#muteSound').text('Mute');
+  } else {
+    musicIsMuted = true;
     backgroundMusic.volume = 0;
+    $('#muteSound').text('Unmute');
   }
 }
-$('#muteSound').change(muteSound);
 
+const hide = (el) => {
+  el.addClass('hide');
+}
+
+const show = (el) => {
+  el.removeClass('hide');
+}
+//Open the Sound Menu
+const openGame = () => {
+  hide($('#startScreen'));
+  show($('#gameScreen'));
+};
 
 //Runs the code
 $("#play-button").click(useMusic);
@@ -101,3 +121,7 @@ $('#backtoMenu').click(closeSettings);
 
 $('#soundButton').click(openSoundMenu);
 $('#returntoMenu').click(closeSoundMenu);
+
+$('#newgameButton').click(openGame);
+
+$('#muteSound').click(toggleMuteMusic);

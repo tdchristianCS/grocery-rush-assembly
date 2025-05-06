@@ -3,6 +3,9 @@
 body {
   margin: 0;
   background-color: #FFEE8C;
+
+  --screen-w: calc(100vw - 30px);
+  --screen-h: calc(100vh - 30px);
 }
 
 .screen {
@@ -11,8 +14,8 @@ body {
   margin: 15px auto;
   padding: 15px;
   max-width: 700px;
-  width: calc(100vw - 30px);
-  height: calc(100vh - 30px);
+  width: var(--screen-w);
+  height: var(--screen-h);
 }
 
 h1, h4 {
@@ -53,7 +56,7 @@ button:active {
 
 img {
   width:370px;
-  padding: 1px; 
+  padding: 1px;
 }
 
 .flex-row {
@@ -149,3 +152,29 @@ h3, p {
   border: 0;
 }
 /* Slider Finished */
+
+/* game */
+
+#backgroundLayer {
+  background: url("https://media-hosting.imagekit.io/381c8ef97c5b47ab/grocerybackground%20(1).jpg?Expires=1841148950&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=mxaVtKTUxb0kTwQYsbduT8mOxmv-~LubNeOCXifeIfWvg9SJP7tOAmLWN7ZEDMUPd1IiPlyScboYLqO703KzWRdfHz9eY5tJ10N3AlX8nHHGntmCeVBHUylggtQtPNv5Q2dMs21KmMeqbMKzcgid8cDlaJCJtCpOl0laho8a1CHpDeTV4CcOoKOEtrGSO~WEXUwokFZK8cFOMhrAsmFUJSMgT41oMJXLxChAOCzNPXTcA8zkkSHBG7T69SJZliIi3HJCAZFgu1lcWokXYiAhiJqXx3-qMTqpqsOOPXZEX70D0bbowj2twj~fmSm8Bf26n5VmoW5zYNdYrvjRbD2kRg__");
+  box-sizing: border-box;
+  background-repeat: no-repeat;
+  margin: 1px auto;
+  padding: 1px;
+  /*max-width: 700px;*/
+  /*background-size: var(--screen-w) var(--screen-h);*/
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#gameScreen {
+  position: relative;
+}
+
+.gameLayer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
