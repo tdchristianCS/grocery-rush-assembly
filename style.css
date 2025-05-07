@@ -1,40 +1,67 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
 /* The styling here pertains to the opening screen mainly :)
  */
 body {
   margin: 0;
   background-color: black;
 
-  --screen-w: calc(100vw - 30px);
-  --screen-h: calc(100vh - 30px);
-}
+  /*--screen-w: calc(100vw - 30px);*/
+  /*--screen-h: calc(100vh - 30px);*/
+  --screen-w: calc(100vw - 0px);
+  --screen-h: calc(100vh + 0px);
+  /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
+
 
 .screen {
-  background-color: black;
+  /*background-color: black;*/
   box-sizing: border-box;
-  margin: 15px auto;
-  padding: 15px;
   max-width: 700px;
+  width: var(--screen-w);
+  height: var(--screen-h);
+}
+
+#app {
   width: var(--screen-w);
   height: var(--screen-h);
 }
 
 h1, h4 {
   text-align: center;
-  font-family: Courier New;
+  font-family: "Courier New", monospace;
+}
+
+#startImg {
+  height: var(--screen-h);
+  width: var(--screen-w);
+  object-fit: contain;
+}
+
+@media screen and (min-width: 1281px) {
+#startImg {
+  object-fit: cover;
+}
+
 }
 
 button {
-  background-color: rgba(209,34,62);
+  /*background-color: rgba(209,34,62);*/
+  background: none;
   border: none;
   outline: none;
   border-radius: 19px;
-  box-shadow: 3px 3px 7px black;
   font-size: 24px;
   display: block;
-  margin: 10px auto;
+  /*margin: 1px auto;*/
   min-height: 70px;
-  width: 100%;
-  font-family: Courier New;
+  width: 100px;
+  color: #fff;
+  font-family: "Courier New", monospace;
+  position: relative;
 }
 
 button:hover, button:active {
@@ -49,6 +76,14 @@ button:active {
   filter:brightness(0.8);
 }
 
+button::before {
+  /* position and size etc */
+}
+
+button:hover::before {
+  content: "→";
+}
+
 .highlight {
   background-color: green;
   color: white;
@@ -57,8 +92,6 @@ button:active {
 img {
   box-sizing: border-box;
   background-repeat: no-repeat;
-  margin: 1px auto;
-  padding: 1px;
   background-size: var(--screen-w) var(--screen-h);
   background-size: cover;
   width: 100%;
@@ -160,10 +193,28 @@ h3, p {
 }
 /* Slider Finished */
 
+#startScreen {
+  position: relative;
+}
+
+
+#title, .menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#welcomeMenu {
+  left: 0%;
+  top: 10%;
+
+}
+
 /* game */
 
+
 #backgroundLayer {
-  background: url("https://media-hosting.imagekit.io/2fbc4db29a494b48/storeimg%20(1).jpg?Expires=1841157820&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=iB8mMykhDi~P0Ft7jlPUZQF4hW5i8AGNK7B3gVpYYvqXl5LMFScVAkXurc2lZeQDZ7PMcJxAVgUGYathbwL-5Kw0PmrSyoDCGVLgcXWwMgs1MJ6jYr1Io3QtLVnUjsBTXL33Wz8kY88JMAdOH7WTrt9zk1A4M5NJmUzrwEkKpn2cK4tcTfnfVnicaMCUcfsRn9f1XCBUk1zkLQ4-Xmj0sABSs7e~IBedb1tRF71EuSktilBYWy4hIPV1KRPTafnBThciQajMK86QiJiN6NJwz5P3n1oOJQ3hBuHWUEOZhONt-11dVYALsQ6x972EQygHKFB4nnaa7WRMeYsV3eToKg__");
+  background-image: url("https://media-hosting.imagekit.io/9dcc920e0d684f54/grocerybackground%20(1)%20(1)%203.jpg?Expires=1841159185&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=YBTG~MVF6h1wK1RrdYzoEthuQpPNkg6QzuFULOKR0ljVQpHL6F9RBtdHQiqDZZSOWD0moiWFTabrxMgTnrD4Ta2gSmOKfAOQSg4QVjRJ5bhFIYnu5KFKSPcJqUWAUPfX3LPRqUb~Zt6ht0eeBGgVNpbGZdZSeaVrsmRN85FGMMB3xke1utFIN8wO78JOMXMo5l~eVxYtLydnUvQg0Ush7ppSRg3Wa5CbIuED6Aw3yZpB348f~kYwbhndBRxS8pq0lUGH6xLr6IVZClNpA9DhagRoCZfeUZ9mbFDKmLwOIYL1wrDo3gH54BfqaaSJzhuCQ6Y6iN~TRHK0nCp7xKVcvQ__");
   /*backgroundIMG from game Don't Give Up (https://gamejolt.com/games/dontgiveup/354865 )*/
   box-sizing: border-box;
   background-repeat: no-repeat;

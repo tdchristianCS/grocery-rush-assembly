@@ -2,120 +2,117 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>Grocery Rush</title>
-  <link rel="stylesheet" href="./style.css" />
+    <meta charset="UTF-8"/>
+    <title>Grocery Rush</title>
+    <link rel="stylesheet" href="./style.css"/>
 </head>
 
 <body>
-  <div id="startScreen">
-    <div id="title">
-      <div class="flex-row">
-        <a class ="flex-row ">
-          <img src="https://media-hosting.imagekit.io/3476a81b724d43ca/Grocery_Rush.png?Expires=1841182055&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=plVQ-~1bbY26t0X0siJQk1jgjZedS5HBg5pq50cjrw4ZEBozST8kWltdtaK2S99NUM5Jk9FYPF2898VZh78ZsQ521IUAjUbI0X387GzMgrEtyiN7Dyc5ycsrZHhi9khzi~X8IVHe-JIw2--TahBOiLkOvrtSOQDolv-8uFTRkQRxO1GkADtOqhNj7fArcNJXGctC5SVMu2c6CQcYa6-ZuhjBxNP5vUOlBSYhgcXSZ2a1Z8lwfClnKqsNoipr4xXnc4xpJtMBcjeMEaE3KfxD6x1Ngjx6a7VpFA0jn2c~tIjc5yrWUZ~70TOMP1km9~6KsQlTPgpwHMnj58WNNM0FqA__"/>
+<div class="flex-col" id="app">
+    <div id="startScreen" class="screen">
+        <a id="startImgLink">
+            <img id="startImg"
+                 src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush.png">
         </a>
-      </div>
-    </div>
 
-    <!-- Welcome Screen -->
-    <div class="screen" id="welcomeMenu">
-      <button class="button" id="play-button">PLAY</button>
-      <button class="button" id="menu-button">Menu</button>
-    </div>
 
-    <!-- Load Game Screen -->
-    <div class="hide screen" id="playMenu">
-      <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
-      <p>
-        <button class="button" id="continueButton" data-screen="loadGame">
-          Continue Game
-        </button>
-      </p>
-      <p>
-        <button class="button" id="newgameButton" data-screen="game">
-          New Game
-        </button>
-      </p>
-      <p>
-        <button class="button" id="return-button" data-screen="loadGame">
-          Return to Home Screen
-        </button>
-      </p>
-    </div>
-    <!-- Menu Screen -->
-    <div class="hide screen" id="helpMenu">
-      <p>
-        <button class="button" id="instructions-button">Instructions</button>
-      </p>
-      <p>
-        <button class="button" id="settings-button">Settings</button>
-        <button id="menu-close">Close Menu</button>
-      </p>
-    </div>
+        <!-- Welcome Screen -->
+        <div class="screen menu" id="welcomeMenu">
+            <button class="button" id="play-button">PLAY</button>
+            <button class="button" id="menu-button">Menu</button>
+        </div>
 
-    <!-- Instruction Screen-->
-    <div class="hide screen" id="instructions">
-      <h3>
-        "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
-        the highest score possible. Each day, customers will arrive at the store with different
-        requests. Depending on the service provided, customers will pay different amount of money.
-        The better the service, the more money a player will collect. This money can be used to buy
-        upgrades which help the store run smoother.
-        .
-      </h3>
-      <h4>Controls:</h4>
-      <p>
-        Move your player using arrow keys. To grab an item, tap and drag to
-        desired location.
-      </p>
-      <p class="footer">
-        <button class="button" data-screen="menu" id="returnButton">
-          Back to Menu
-        </button>
-      </p>
-    </div>
-    <!-- Settings Screen -->
-    <div class="hide screen" id="settings">
-      <button class="button" id="soundButton">Sound</button>
-      <button class="button" id="controls">Controls</button>
-      <button class="button" id="backtoMenu">Close Settings</button>
-    </div>
+        <!-- Load Game Screen -->
+        <div class="hide screen menu" id="playMenu">
+            <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
+            <p>
+                <button class="button" id="continueButton" data-screen="loadGame">
+                    Continue Game
+                </button>
+            </p>
+            <p>
+                <button class="button" id="newgameButton" data-screen="game">
+                    New Game
+                </button>
+            </p>
+            <p>
+                <button class="button" id="return-button" data-screen="loadGame">
+                    Return to Home Screen
+                </button>
+            </p>
+        </div>
+        <!-- Menu Screen -->
+        <div class="hide screen menu" id="helpMenu">
+            <p>
+                <button class="button" id="instructions-button">Instructions</button>
+            </p>
+            <p>
+                <button class="button" id="settings-button">Settings</button>
+                <button id="menu-close">Close Menu</button>
+            </p>
+        </div>
 
-    <!--Sound Control Screen-->
-    <div class="hide screen" id="soundControl">
-      <div class="demo">
-        <div class="flex-col">
-          <div class="flex-row">
-            <div class="range-slider">
-              <input id='volume' type="range" value="50" min="0" max="100" range="true">
+        <!-- Instruction Screen-->
+        <div class="hide screen menu" id="instructions">
+            <h3>
+                "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
+                the highest score possible. Each day, customers will arrive at the store with different
+                requests. Depending on the service provided, customers will pay different amount of money.
+                The better the service, the more money a player will collect. This money can be used to buy
+                upgrades which help the store run smoother.
+                .
+            </h3>
+            <h4>Controls:</h4>
+            <p>
+                Move your player using arrow keys. To grab an item, tap and drag to
+                desired location.
+            </p>
+            <p class="footer">
+                <button class="button" data-screen="menu" id="returnButton">
+                    Back to Menu
+                </button>
+            </p>
+        </div>
+        <!-- Settings Screen -->
+        <div class="hide screen menu" id="settings">
+            <button class="button" id="soundButton">Sound</button>
+            <button class="button" id="controls">Controls</button>
+            <button class="button" id="backtoMenu">Close Settings</button>
+        </div>
+
+        <!--Sound Control Screen-->
+        <div class="hide screen menu" id="soundControl">
+            <div class="demo">
+                <div class="flex-col">
+                    <div class="flex-row">
+                        <div class="range-slider">
+                            <input id='volume' type="range" value="50" min="0" max="100" range="true">
+                        </div>
+                        <div class="flex-col">
+                            <div class="range-value" id="volume-display">50</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-row">
+                    <button class="button" id="muteSound">Mute</button>
+                </div>
+                <div class="flex-row">
+                    <button class="button" id="returntoMenu">Close Sound Settings</button>
+                </div>
             </div>
-            <div class="flex-col">
-              <div class="range-value" id="volume-display">50</div>
-            </div>
-          </div>
         </div>
-        <div class="flex-row">
-          <button class="button" id="muteSound">Mute</button>
-        </div>
-        <div class="flex-row">
-          <button class="button" id="returntoMenu">Close Sound Settings</button>
-        </div>
-      </div>
+
+        <!--Game Screen Information-->
     </div>
+    <div id="gameScreen" class="screen  hide">
+        <div id="backgroundLayer" class="gameLayer"></div>
+        <div id="characterLayer" class="gameLayer"></div>
+    </div>
+</div>
 
-<!--Game Screen Information-->
-  </div>
-  <div id="gameScreen" class="screen  hide">
-    <div id="backgroundLayer" class="gameLayer"></div>
-    <div id="characterLayer" class="gameLayer"></div>
-  </div>
-
-
-
-
-  <!-- partial -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="./script.js"></script>
+<!-- partial -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="./script.js"></script>
 </body>
 
 </html>
