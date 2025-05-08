@@ -5,6 +5,10 @@
     <meta charset="UTF-8"/>
     <title>Grocery Rush</title>
     <link rel="stylesheet" href="./style.css"/>
+    <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"quokka"-->
+    <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"receipt-narrow"-->
+
+
 </head>
 
 <body>
@@ -14,43 +18,25 @@
             <img id="startImg"
                  src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush.png">
         </a>
-
+        </div>
 
         <!-- Welcome Screen -->
         <div class="screen menu" id="welcomeMenu">
             <button class="button" id="play-button">PLAY</button>
-            <button class="button" id="menu-button">Menu</button>
         </div>
 
         <!-- Load Game Screen -->
         <div class="hide screen menu" id="playMenu">
             <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
-            <p>
-                <button class="button" id="continueButton" data-screen="loadGame">
-                    Continue Game
-                </button>
-            </p>
-            <p>
-                <button class="button" id="newgameButton" data-screen="game">
-                    New Game
-                </button>
-            </p>
-            <p>
+                <button class="button" id="continueButton" data-screen="loadGame">Continue Game</button>
+                <button class="button" id="newgameButton" data-screen="game">New Game</button>
+                <button class="button" id="instructions-button">Instructions</button>
+                <button class="button" id="settings-button">Settings</button>
                 <button class="button" id="return-button" data-screen="loadGame">
                     Return to Home Screen
                 </button>
-            </p>
-        </div>
-        <!-- Menu Screen -->
-        <div class="hide screen menu" id="helpMenu">
-            <p>
-                <button class="button" id="instructions-button">Instructions</button>
-            </p>
-            <p>
-                <button class="button" id="settings-button">Settings</button>
-                <button id="menu-close">Close Menu</button>
-            </p>
-        </div>
+            </div>
+
 
         <!-- Instruction Screen-->
         <div class="hide screen menu" id="instructions">
@@ -75,6 +61,7 @@
         </div>
         <!-- Settings Screen -->
         <div class="hide screen menu" id="settings">
+            <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
             <button class="button" id="soundButton">Sound</button>
             <button class="button" id="controls">Controls</button>
             <button class="button" id="backtoMenu">Close Settings</button>
@@ -107,6 +94,7 @@
     <div id="gameScreen" class="screen  hide">
         <div id="backgroundLayer" class="gameLayer"></div>
         <div id="characterLayer" class="gameLayer"></div>
+        <img id="simpleBackground" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
     </div>
 </div>
 

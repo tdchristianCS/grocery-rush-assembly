@@ -18,15 +18,6 @@ const closePlayMenu = () => {
   $('#welcomeMenu').removeClass('hide');
 };
 
-//Opens and Closes the menu with things such as settings and instructions
-const openHelpMenu = () => {
-  $('#helpMenu').removeClass('hide');
-  $('#welcomeMenu').addClass('hide');
-};
-const closeHelpMenu = () => {
-  $('#helpMenu').addClass('hide');
-  $('#welcomeMenu').removeClass('hide');
-};
 
 //Opens and Closes the instructions screen
 const openInstructions = () => {
@@ -106,10 +97,6 @@ const openGame = () => {
 
 //Runs the code
 $("#play-button").click(useMusic)
-
-$('#menu-button').click(openHelpMenu);
-$('#menu-close').click(closeHelpMenu);
-
 
 $('#instructions-button').click(openInstructions);
 $('#returnButton').click(closeInstructions);
