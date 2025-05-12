@@ -1,14 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8"/>
     <title>Grocery Rush</title>
     <link rel="stylesheet" href="./style.css"/>
     <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"quokka"-->
     <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"receipt-narrow"-->
-
-
 </head>
 
 <body>
@@ -18,84 +15,87 @@
             <img id="startImg"
                  src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush.png">
         </a>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div class="screen menu" id="welcomeMenu">
+        <button class="button" id="play-button">PLAY</button>
+    </div>
+
+    <!-- Load Game Screen -->
+    <div class="hide screen menu" id="menuMenu">
+        <img id="backgroundIMG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
+        <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
+        <div class="button-overlay">
+            <button class="button" id="continueButton" data-screen="loadGame">Continue Game</button>
+            <button class="button" id="newgameButton" data-screen="game">New Game</button>
+            <button class="button" id="instructions-button">Instructions</button>
+            <button class="button" id="settings-button">Settings</button>
+            <button class="button" id="return-button" data-screen="loadGame">
+                Return to Home Screen
+            </button>
         </div>
-
-        <!-- Welcome Screen -->
-        <div class="screen menu" id="welcomeMenu">
-            <button class="button" id="play-button">PLAY</button>
-        </div>
-
-        <!-- Load Game Screen -->
-        <div class="hide screen menu" id="playMenu">
-            <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
-                <button class="button" id="continueButton" data-screen="loadGame">Continue Game</button>
-                <button class="button" id="newgameButton" data-screen="game">New Game</button>
-                <button class="button" id="instructions-button">Instructions</button>
-                <button class="button" id="settings-button">Settings</button>
-                <button class="button" id="return-button" data-screen="loadGame">
-                    Return to Home Screen
-                </button>
-            </div>
+    </div>
 
 
-        <!-- Instruction Screen-->
-        <div class="hide screen menu" id="instructions">
-            <h3>
-                "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
-                the highest score possible. Each day, customers will arrive at the store with different
-                requests. Depending on the service provided, customers will pay different amount of money.
-                The better the service, the more money a player will collect. This money can be used to buy
-                upgrades which help the store run smoother.
-                .
-            </h3>
-            <h4>Controls:</h4>
-            <p>
-                Move your player using arrow keys. To grab an item, tap and drag to
-                desired location.
-            </p>
-            <p class="footer">
-                <button class="button" data-screen="menu" id="returnButton">
-                    Back to Menu
-                </button>
-            </p>
-        </div>
-        <!-- Settings Screen -->
-        <div class="hide screen menu" id="settings">
-            <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-            <button class="button" id="soundButton">Sound</button>
-            <button class="button" id="controls">Controls</button>
-            <button class="button" id="backtoMenu">Close Settings</button>
-        </div>
+    <!-- Instruction Screen-->
+    <div class="hide screen menu" id="instructions">
+        <h3>
+            "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
+            the highest score possible. Each day, customers will arrive at the store with different
+            requests. Depending on the service provided, customers will pay different amount of money.
+            The better the service, the more money a player will collect. This money can be used to buy
+            upgrades which help the store run smoother.
+            .
+        </h3>
+        <h4>Controls:</h4>
+        <p>
+            Move your player using arrow keys. To grab an item, tap and drag to
+            desired location.
+        </p>
+        <p class="footer">
+            <button class="button" data-screen="menu" id="returnButton">
+                Back to Menu
+            </button>
+        </p>
+    </div>
+    <!-- Settings Screen -->
+    <div class="hide screen menu" id="settings">
+        <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
+        <button class="button" id="soundButton">Sound</button>
+        <button class="button" id="controls">Controls</button>
+        <button class="button" id="backtoMenu">Close Settings</button>
+    </div>
 
-        <!--Sound Control Screen-->
-        <div class="hide screen menu" id="soundControl">
-            <div class="demo">
-                <div class="flex-col">
-                    <div class="flex-row">
-                        <div class="range-slider">
-                            <input id='volume' type="range" value="50" min="0" max="100" range="true">
-                        </div>
-                        <div class="flex-col">
-                            <div class="range-value" id="volume-display">50</div>
-                        </div>
+    <!--Sound Control Screen-->
+    <div class="hide screen menu" id="soundControl">
+        <div class="demo">
+            <div class="flex-col">
+                <div class="flex-row">
+                    <div class="range-slider">
+                        <input id='volume' type="range" value="50" min="0" max="100" range="true">
+                    </div>
+                    <div class="flex-col">
+                        <div class="range-value" id="volume-display">50</div>
                     </div>
                 </div>
-                <div class="flex-row">
-                    <button class="button" id="muteSound">Mute</button>
-                </div>
-                <div class="flex-row">
-                    <button class="button" id="returntoMenu">Close Sound Settings</button>
-                </div>
+            </div>
+            <div class="flex-row">
+                <button class="button" id="muteSound">Mute</button>
+            </div>
+            <div class="flex-row">
+                <button class="button" id="returntoMenu">Close Sound Settings</button>
             </div>
         </div>
+    </div>
 
-        <!--Game Screen Information-->
-    </div>
-    <div id="gameScreen" class="screen  hide">
-        <div id="backgroundLayer" class="gameLayer"></div>
-        <div id="characterLayer" class="gameLayer"></div>
-        <img id="simpleBackground" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-    </div>
+    <!--Game Screen Information-->
+</div>
+<div id="gameScreen" class="screen  hide">
+    <div id="backgroundLayer" class="gameLayer"></div>
+    <div id="characterLayer" class="gameLayer"></div>
+    <img id="simpleBackground" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
+</div>
 </div>
 
 <!-- partial -->

@@ -8,16 +8,15 @@ let musicLastVolume = backgroundMusic.volume;
 let musicIsMuted = false;
 
 //Open the load game screen
-const openPlayMenu = () => {
-  $('#playMenu').removeClass('hide');
+const openMenu = () => {
+  $('#menuMenu').removeClass('hide');
   $('#welcomeMenu').addClass('hide');
 };
-
-const closePlayMenu = () => {
-  $('#playMenu').addClass('hide');
+const closeMenu = () => {
+  $('#menuMenu').addClass('hide');
   $('#welcomeMenu').removeClass('hide');
 };
-
+//------------------------------------------------//
 
 //Opens and Closes the instructions screen
 const openInstructions = () => {
@@ -28,6 +27,8 @@ const closeInstructions = () => {
   $('#instructions').addClass('hide');
   $('#helpMenu').removeClass('hide');
 };
+//------------------------------------------------//
+
 
 //Opens and Closes the settings menu
 const openSettings = () => {
@@ -49,12 +50,19 @@ const closeSoundMenu = () => {
   $('#settings').removeClass('hide');
 };
 
+
+const openGameArea = () => {
+  hide($('#startScreen'))
+  show($('#gameScreen'));
+}
+
+$('#newgameButton').click(openGameArea())
+
 // Tests music and prints a value to show if it was successful
 const useMusic = () => {
   console.log("Sound Succesfull");
   backgroundMusic.play();
 };
-
 
 //Controls the volume
 const handleVolumeUpdate = (e) => {
@@ -91,7 +99,6 @@ const show = (el) => {
 const openGame = () => {
   hide($('#startScreen'));
   show($('#gameScreen'));
-  $('body').css('background', 'rgba(193,155,138,1)');
 };
 
 
@@ -101,8 +108,8 @@ $("#play-button").click(useMusic)
 $('#instructions-button').click(openInstructions);
 $('#returnButton').click(closeInstructions);
 
-$('#play-button').click(openPlayMenu);
-$('#return-button').click(closePlayMenu);
+$('#play-button').click(openMenu);
+$('#return-button').click(closeMenu);
 
 $('#settings-button').click(openSettings);
 $('#backtoMenu').click(closeSettings);
@@ -113,3 +120,4 @@ $('#returntoMenu').click(closeSoundMenu);
 $('#newgameButton').click(openGame);
 
 $('#muteSound').click(toggleMuteMusic);
+

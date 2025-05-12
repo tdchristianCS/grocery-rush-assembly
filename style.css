@@ -4,7 +4,6 @@
     margin: 0;
     box-sizing: border-box;
 }
-
 /*-----------------------------------------*/
 
 
@@ -14,25 +13,20 @@
     flex-direction: row;
     justify-content: center;
 }
-
 .flex-col {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-
 a {
     flex-shrink: 1;
     display: block;
 }
-
 .hide {
     display: none;
     visibility: hidden;
 }
-
 /*-----------------------------------------*/
-
 
 /*Sets the background colour and screen styling*/
 body {
@@ -42,20 +36,20 @@ body {
     --screen-h: calc(100vh + 0px);
     /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
 }
-
 .screen {
     /*background-color: black;*/
     box-sizing: border-box;
-    max-width: 700px;
+    /*max-width: 700px;*/
     width: var(--screen-w);
     height: var(--screen-h);
+    position: absolute;
+    top: 0;
+    left: 0;
 }
-
 #app {
     width: var(--screen-w);
     height: var(--screen-h);
 }
-
 /*-----------------------------------------*/
 
 
@@ -64,7 +58,6 @@ h1, h4, h3, p {
     text-align: center;
     font-family: "quokka", monospace;
 }
-
 /*-----------------------------------------*/
 
 
@@ -76,29 +69,26 @@ it ensures that everything is inline and set up correctly */
     width: var(--screen-w);
     object-fit: contain;
 }
-
 @media screen and (min-width: 1281px) {
     #startImg {
         object-fit: cover;
     }
+}
 
     /*-----------------------------------------*/
     /*This applies to the Game Title screen  */
     #startScreen {
         position: relative;
     }
-
     #startImgLink, #startImg, .menu {
         position: absolute;
         top: 0;
         left: 0;
     }
-
     #welcomeMenu {
         left: 0.5%;
         top: 50vh;
     }
-
     /*Styles ONLY the play-button*/
     #play-button {
         background: none;
@@ -115,35 +105,29 @@ it ensures that everything is inline and set up correctly */
         font-family: "quokka", sans-serif;
         position: relative;
     }
-
     /*-----------------------------------------*/
     /*Styles the different hover features of the button aspects*/
     button:hover, button:active {
         cursor: pointer;
     }
-
     button:hover {
         filter: brightness(1.2);
     }
-
     button:active {
         filter: brightness(0.8);
     }
-
     button::before {
         /* position and size etc */
     }
-
     button:hover::before {
         content: "▸";
     }
-
     .highlight {
         background-color: green;
         color: white;
     }
-
     /*-----------------------------------------*/
+
     /*Different Img styling  */
     img {
         box-sizing: border-box;
@@ -154,8 +138,21 @@ it ensures that everything is inline and set up correctly */
         height: 100%;
         object-fit: contain;
     }
+    /*-----------------------------------------*/
+
+    /*Game Background Screen*/
+    #backgroundIMG {
+        height: var(--screen-h);
+        width: var(--screen-w);
+        object-fit: contain;
+    }
+    @media screen and (min-width: 1281px) {
+        #backgroundIMG {
+            object-fit: cover;
+        }
 
     /*-----------------------------------------*/
+
     /*Styling for the game settings/menu area  */
     #gameBG {
         height: var(--screen-h);
@@ -167,6 +164,7 @@ it ensures that everything is inline and set up correctly */
         #startImg {
             object-fit: cover;
         }
+    }
 
 
         /* This crazy all for the slider  */
@@ -178,7 +176,6 @@ it ensures that everything is inline and set up correctly */
             display: flex;
             flex-direction: row;
         }
-
         .range-slider input[type="range"] {
             background: linear-gradient(178deg, transparent 49%, rgba(0, 0, 0, 0.1) 51%);
             width: 100%;
@@ -186,7 +183,6 @@ it ensures that everything is inline and set up correctly */
             outline: none;
             -webkit-appearance: none;
         }
-
         .range-slider input[type="range"]::-webkit-slider-thumb {
             /*-webkit-slider-thumb from https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-slider-thumb */
             background: rgba(209, 34, 62);
@@ -199,12 +195,10 @@ it ensures that everything is inline and set up correctly */
             appearance: none;
             clip-path: polygon(100% 0, 100% 65%, 50% 100%, 0% 65%, 0 0);
         }
-
         .range-slider input[type="range"]::-webkit-slider-thumb:hover,
         .range-slider input[type="range"]:active::-webkit-slider-thumb {
             box-shadow: 0 0 8px -3px #000 inset;
         }
-
         .range-slider input[type="range"]::-moz-range-thumb {
             /*-moz-range-thumb{from https://developer.mozilla.org/en-US/docs/Web/CSS/::-moz-range-thumb */
             background: rgba(209, 34, 62);
@@ -216,12 +210,10 @@ it ensures that everything is inline and set up correctly */
             transition: all 0.15s ease-in-out 0s;
             clip-path: polygon(100% 0, 100% 65%, 50% 100%, 0% 65%, 0 0);
         }
-
         .range-slider input[type="range"]::-moz-range-thumb:hover,
         .range-slider input[type="range"]:active::-moz-range-thumb {
             box-shadow: 0 0 8px -3px #000 inset;
         }
-
         .range-value {
             color: #fff;
             background: rgba(209, 34, 62);
@@ -235,7 +227,6 @@ it ensures that everything is inline and set up correctly */
             right: 5px;
             height: 20px;
         }
-
         ::-moz-range-track {
             background: transparent;
             border: 0;
@@ -244,7 +235,7 @@ it ensures that everything is inline and set up correctly */
         /* Slider Finished */
         /* game */
         #backgroundLayer {
-            background-image: https: / / g . tdchristian . ca /GROCERY-RUSH/ assets / Store-Inside . png;
+            background-image: url("https://g.tdchristian.ca/GROCERY-RUSH/assets/Store-Inside.png");
             box-sizing: border-box;
             background-repeat: no-repeat;
             margin: 1px auto;
@@ -255,14 +246,39 @@ it ensures that everything is inline and set up correctly */
             width: 100%;
             height: 100%;
             object-fit: contain;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
-
         #gameScreen {
             position: relative;
         }
-
         .gameLayer {
             position: absolute;
             top: 0;
             left: 0;
         }
+    }
+
+.button-overlay {
+    position: absolute;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    top: 0;
+    left: 0;
+    background: none;
+    border: none;
+    outline: none;
+    border-radius: 19px;
+    /*font-size: 4rem;*/
+    font-size: 5vh;
+    display: block;
+    /*margin: 1px auto;*/
+    min-height: 70px;
+    width: 100px;
+    color: black;
+    font-family: "quokka", sans-serif;
+    position: relative;
+}
