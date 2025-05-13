@@ -1,13 +1,8 @@
-/*Styling that applies to everything*/
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
 }
-/*-----------------------------------------*/
-
-
-/*General format stuff*/
 .flex-row {
     display: flex;
     flex-direction: row;
@@ -26,17 +21,14 @@ a {
     display: none;
     visibility: hidden;
 }
-/*-----------------------------------------*/
-
-/*Sets the background colour and screen styling*/
 body {
     margin: 0;
-    background-color: black;
+    background-color: white;
     --screen-w: calc(100vw - 0px);
     --screen-h: calc(100vh + 0px);
     /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
 }
-.screen {
+.screen, .layer {
     /*background-color: black;*/
     box-sizing: border-box;
     /*max-width: 700px;*/
@@ -46,24 +38,17 @@ body {
     top: 0;
     left: 0;
 }
+
+
 #app {
     width: var(--screen-w);
     height: var(--screen-h);
 }
-/*-----------------------------------------*/
-
-
-/*Applies to headings and other kinds of text in the h format*/
 h1, h4, h3, p {
     text-align: center;
     font-family: "quokka", monospace;
 }
-/*-----------------------------------------*/
 
-
-/*This helps to format the opening screen
-(saved in HTML under the same id)
-it ensures that everything is inline and set up correctly */
 #startImg {
     height: var(--screen-h);
     width: var(--screen-w);
@@ -74,200 +59,22 @@ it ensures that everything is inline and set up correctly */
         object-fit: cover;
     }
 }
+#startScreen {
+    position: relative;
+}
 
-    /*-----------------------------------------*/
-    /*This applies to the Game Title screen  */
-    #startScreen {
-        position: relative;
-    }
-    #startImgLink, #startImg, .menu {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    #welcomeMenu {
-        left: 0.5%;
-        top: 50vh;
-    }
-    /*Styles ONLY the play-button*/
-    #play-button {
-        background: none;
-        border: none;
-        outline: none;
-        border-radius: 19px;
-        /*font-size: 4rem;*/
-        font-size: 5vh;
-        display: block;
-        /*margin: 1px auto;*/
-        min-height: 70px;
-        width: 100px;
-        color: black;
-        font-family: "quokka", sans-serif;
-        position: relative;
-    }
-    /*-----------------------------------------*/
-    /*Styles the different hover features of the button aspects*/
-    button:hover, button:active {
-        cursor: pointer;
-    }
-    button:hover {
-        filter: brightness(1.2);
-    }
-    button:active {
-        filter: brightness(0.8);
-    }
-    button::before {
-        /* position and size etc */
-    }
-    button:hover::before {
-        content: "▸";
-    }
-    .highlight {
-        background-color: green;
-        color: white;
-    }
-    /*-----------------------------------------*/
-
-    /*Different Img styling  */
-    img {
-        box-sizing: border-box;
-        background-repeat: no-repeat;
-        background-size: var(--screen-w) var(--screen-h);
-        background-size: cover;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-    /*-----------------------------------------*/
-
-    /*Game Background Screen*/
-    #backgroundIMG {
-        height: var(--screen-h);
-        width: var(--screen-w);
-        object-fit: contain;
-    }
-    @media screen and (min-width: 1281px) {
-        #backgroundIMG {
-            object-fit: cover;
-        }
-
-    /*-----------------------------------------*/
-
-    /*Styling for the game settings/menu area  */
-    #gameBG {
-        height: var(--screen-h);
-        width: var(--screen-w);
-        object-fit: contain;
-    }
-
-    @media screen and (min-width: 1281px) {
-        #startImg {
-            object-fit: cover;
-        }
-    }
-
-
-        /* This crazy all for the slider  */
-        /* TODO make slider longer*/
-        .range-slider {
-            padding: 15px 60px 7px 0;
-            margin: 10px 0 0 0;
-            /* position: relative; */
-            display: flex;
-            flex-direction: row;
-        }
-        .range-slider input[type="range"] {
-            background: linear-gradient(178deg, transparent 49%, rgba(0, 0, 0, 0.1) 51%);
-            width: 100%;
-            height: 24px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        .range-slider input[type="range"]::-webkit-slider-thumb {
-            /*-webkit-slider-thumb from https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-slider-thumb */
-            background: rgba(209, 34, 62);
-            width: 23px;
-            height: 23px;
-            cursor: pointer;
-            border-radius: 20px;
-            transition: all 0.15s ease-in-out 0s;
-            -webkit-appearance: none;
-            appearance: none;
-            clip-path: polygon(100% 0, 100% 65%, 50% 100%, 0% 65%, 0 0);
-        }
-        .range-slider input[type="range"]::-webkit-slider-thumb:hover,
-        .range-slider input[type="range"]:active::-webkit-slider-thumb {
-            box-shadow: 0 0 8px -3px #000 inset;
-        }
-        .range-slider input[type="range"]::-moz-range-thumb {
-            /*-moz-range-thumb{from https://developer.mozilla.org/en-US/docs/Web/CSS/::-moz-range-thumb */
-            background: rgba(209, 34, 62);
-            width: 23px;
-            height: 23px;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.15s ease-in-out 0s;
-            clip-path: polygon(100% 0, 100% 65%, 50% 100%, 0% 65%, 0 0);
-        }
-        .range-slider input[type="range"]::-moz-range-thumb:hover,
-        .range-slider input[type="range"]:active::-moz-range-thumb {
-            box-shadow: 0 0 8px -3px #000 inset;
-        }
-        .range-value {
-            color: #fff;
-            background: rgba(209, 34, 62);
-            font-size: 18px;
-            font-weight: 600;
-            text-align: center;
-            width: 45px;
-            padding: 3px 0;
-            position: relative;
-            bottom: 8px;
-            right: 5px;
-            height: 20px;
-        }
-        ::-moz-range-track {
-            background: transparent;
-            border: 0;
-        }
-
-        /* Slider Finished */
-        /* game */
-        #backgroundLayer {
-            background-image: url("https://g.tdchristian.ca/GROCERY-RUSH/assets/Store-Inside.png");
-            box-sizing: border-box;
-            background-repeat: no-repeat;
-            margin: 1px auto;
-            padding: 1px;
-            /*max-width: 700px;*/
-            /*background-size: var(--screen-w) var(--screen-h);*/
-            background-size: cover;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        #gameScreen {
-            position: relative;
-        }
-        .gameLayer {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    }
-
-.button-overlay {
+#startImgLink, #startImg, .menu {
     position: absolute;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
     top: 0;
     left: 0;
+}
+
+#welcomeMenu {
+    left: 0.5%;
+    top: 50vh;
+}
+
+#play-button {
     background: none;
     border: none;
     outline: none;
@@ -282,3 +89,76 @@ it ensures that everything is inline and set up correctly */
     font-family: "quokka", sans-serif;
     position: relative;
 }
+
+button:hover, button:active {
+    cursor: pointer;
+}
+button:hover {
+    filter: brightness(1.2);
+}
+button:active {
+    filter: brightness(0.8);
+}
+button::before {
+    /* position and size etc */
+}
+button:hover::before {
+    content: "▸";
+}
+.highlight {
+    background-color: green;
+    color: white;
+}
+
+img {
+    box-sizing: border-box;
+    background-repeat: no-repeat;
+    background-size: var(--screen-w) var(--screen-h);
+    background-size: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#gameBackgroundLayer {
+    z-index: 1;
+}
+
+#customerLayer {
+    z-index: 2;
+}
+
+#storeBackgroundLayer {
+    z-index: 3;
+}
+
+    #gameBackground {
+        height: var(--screen-h);
+        width: var(--screen-w);
+        object-fit: contain;
+    }
+
+    @media screen and (min-width: 1281px) {
+        #gameBackground {
+            object-fit: cover;
+        }
+    }
+
+    #storeBackground {
+        box-sizing: border-box;
+        background-repeat: no-repeat;
+        margin: 1px auto;
+        /*padding: 1px;*/
+        background-size: cover;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    #gameScreen {
+        position: relative;
+    }
+

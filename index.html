@@ -22,21 +22,6 @@
         <button class="button" id="play-button">PLAY</button>
     </div>
 
-    <!-- Load Game Screen -->
-    <div class="hide screen menu" id="menuMenu">
-        <img id="backgroundIMG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-        <!-- The plan is that the continue game button will only show up once a person has already started a game. Hopefully will be able to save this information with cookies -->
-        <div class="button-overlay">
-            <button class="button" id="continueButton" data-screen="loadGame">Continue Game</button>
-            <button class="button" id="newgameButton" data-screen="game">New Game</button>
-            <button class="button" id="instructions-button">Instructions</button>
-            <button class="button" id="settings-button">Settings</button>
-            <button class="button" id="return-button" data-screen="loadGame">
-                Return to Home Screen
-            </button>
-        </div>
-    </div>
-
 
     <!-- Instruction Screen-->
     <div class="hide screen menu" id="instructions">
@@ -66,7 +51,6 @@
         <button class="button" id="controls">Controls</button>
         <button class="button" id="backtoMenu">Close Settings</button>
     </div>
-
     <!--Sound Control Screen-->
     <div class="hide screen menu" id="soundControl">
         <div class="demo">
@@ -89,17 +73,24 @@
         </div>
     </div>
 
+    <div id="gameScreen" class="hide screen menu">
+        <div id="gameBackgroundLayer" class="layer">
+            <img id="gameBackground"
+                 src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
+        </div>
+
+        <div id="customerLayer" class="layer"></div>
+        <div id="storeBackgroundLayer" class="layer">
+            <img id="storeBackground"
+                 src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Store-Inside.png">
+        </div>
+    </div>
     <!--Game Screen Information-->
-</div>
-<div id="gameScreen" class="screen  hide">
-    <div id="backgroundLayer" class="gameLayer"></div>
-    <div id="characterLayer" class="gameLayer"></div>
-    <img id="simpleBackground" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-</div>
 </div>
 
 <!-- partial -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://g.sawczak.com/web-tools/js/app-tools.js"></script>
 <script src="./script.js"></script>
 </body>
 

@@ -7,64 +7,35 @@ backgroundMusic.volume = 0.5;
 let musicLastVolume = backgroundMusic.volume;
 let musicIsMuted = false;
 
-//Open the load game screen
-const openMenu = () => {
-  $('#menuMenu').removeClass('hide');
-  $('#welcomeMenu').addClass('hide');
+const customerURL = "https://g.tdchristian.ca/GROCERY-RUSH/assets/customer.png"
+const customerIMG = `<img src="${customerURL}" class="customer">`;
+const hide = (el) => {
+    el.addClass('hide');
 };
-const closeMenu = () => {
-  $('#menuMenu').addClass('hide');
-  $('#welcomeMenu').removeClass('hide');
+const show = (el) => {
+    el.removeClass('hide');
 };
-//------------------------------------------------//
-
-//Opens and Closes the instructions screen
-const openInstructions = () => {
-  $('#instructions').removeClass('hide');
-  $('#helpMenu').addClass('hide');
-};
-const closeInstructions = () => {
-  $('#instructions').addClass('hide');
-  $('#helpMenu').removeClass('hide');
-};
-//------------------------------------------------//
-
-
-//Opens and Closes the settings menu
-const openSettings = () => {
-  $('#settings').removeClass('hide');
-  $('#helpMenu').addClass('hide');
-};
-const closeSettings = () => {
-  $('#settings').addClass('hide');
-  $('#helpMenu').removeClass('hide');
-};
-
-//Opens and Closes the Sound Menu
-const openSoundMenu = () => {
-  $('#soundControl').removeClass('hide');
-  $('#settings').addClass('hide');
-};
-const closeSoundMenu = () => {
-  $('#soundControl').addClass('hide');
-  $('#settings').removeClass('hide');
-};
-
-
-const openGameArea = () => {
-  hide($('#startScreen'))
+const openGameScreen = () => {
+  hide($('#startScreen'));
   show($('#gameScreen'));
-}
 
-$('#newgameButton').click(openGameArea())
+  spawnInterval = setInterval(spawnCustomer, 1_000);
+};
 
-// Tests music and prints a value to show if it was successful
+const spawnCustomer = () => {
+  let left = Tools.random(0,100);
+  let top = Tools.random(0,100);
+
+  let html = `<img src="${customerURL}" class="customer" style="left: ${left}%; top: ${top}%;">`
+  $("#customerLayer").append(html);
+  console.log(left, top);
+};
+
+
 const useMusic = () => {
   console.log("Sound Succesfull");
   backgroundMusic.play();
 };
-
-//Controls the volume
 const handleVolumeUpdate = (e) => {
   let value = parseInt(e.target.value);
   $('#volume-display').text(value);
@@ -74,8 +45,6 @@ const handleVolumeUpdate = (e) => {
 $(document).ready(function(){
   $('#volume').change(handleVolumeUpdate);
 });
-
-//Mutes bgMusic
 const toggleMuteMusic = () => {
   if (musicIsMuted) {
     musicIsMuted = false;
@@ -88,36 +57,9 @@ const toggleMuteMusic = () => {
   }
 }
 
-const hide = (el) => {
-  el.addClass('hide');
-}
-
-const show = (el) => {
-  el.removeClass('hide');
-}
-//Open the Game Panel
-const openGame = () => {
-  hide($('#startScreen'));
-  show($('#gameScreen'));
-};
-
-
 //Runs the code
 $("#play-button").click(useMusic)
-
-$('#instructions-button').click(openInstructions);
-$('#returnButton').click(closeInstructions);
-
-$('#play-button').click(openMenu);
-$('#return-button').click(closeMenu);
-
-$('#settings-button').click(openSettings);
-$('#backtoMenu').click(closeSettings);
-
-$('#soundButton').click(openSoundMenu);
-$('#returntoMenu').click(closeSoundMenu);
-
-$('#newgameButton').click(openGame);
-
 $('#muteSound').click(toggleMuteMusic);
+$("#play-button").click(openGameScreen);
 
+var spawnInterval;
