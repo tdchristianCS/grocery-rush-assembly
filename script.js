@@ -7,7 +7,7 @@ backgroundMusic.volume = 0.5;
 let musicLastVolume = backgroundMusic.volume;
 let musicIsMuted = false;
 
-const customerURL = "https://g.tdchristian.ca/GROCERY-RUSH/assets/customer.png"
+const customerURL = "assets/customer.png"
 const customerIMG = `<img src="${customerURL}" class="customer">`;
 const hide = (el) => {
     el.addClass('hide');
@@ -19,7 +19,7 @@ const openGameScreen = () => {
   hide($('#startScreen'));
   show($('#gameScreen'));
 
-  spawnInterval = setInterval(spawnCustomer, 1_000);
+  spawnInterval = setInterval(spawnCustomer, 10_000);
 };
 
 const spawnCustomer = () => {
