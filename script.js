@@ -19,12 +19,12 @@ const openGameScreen = () => {
   hide($('#startScreen'));
   show($('#gameScreen'));
 
-  spawnInterval = setInterval(spawnCustomer, 10_000);
+  spawnInterval = setInterval(spawnCustomer, 5_000);
 };
 
 const spawnCustomer = () => {
-  let left = Tools.random(0,100);
-  let top = Tools.random(0,100);
+  let left = Tools.random(30,65);
+  let top = Tools.random(30,72);
 
   let html = `<img src="${customerURL}" class="customer" style="left: ${left}%; top: ${top}%;">`
   $("#customerLayer").append(html);
