@@ -17,6 +17,7 @@ var customers = [];
 
 const customerSize = 100;
 const customerSpawnRate = 500;
+const refreshRate = 1_000 / 60;
 
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
@@ -57,6 +58,7 @@ const hide = (el) => {
 const show = (el) => {
     el.removeClass('hide');
 };
+
 const openGameScreen = () => {
     hide($('#startScreen'));
     show($('#gameScreen'));
@@ -64,6 +66,8 @@ const openGameScreen = () => {
     ctxBG.drawImage(imgBG, 0, 0, vW, vH);
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
+    refreshInterval = setInterval(drawGame, refreshRate);
+
 
     // debug
     // ctxStore.strokeStyle = 'ff0000';
@@ -74,11 +78,7 @@ const openGameScreen = () => {
 };
 
 const pointIsInRectangle = (p, r) => {
-    console.log(p);
-    console.log(r);
-    console.log((r.lx <= p.x) && (p.x <= r.rx) && (r.ty <= p.y) && (p.y <= r.by));
-    console.log('    ');
-    return (r.lx <= p.x) && (p.x <= r.rx) && (r.ty <= p.y) && (p.y <= r.by);
+    return ((r.lx <= p.x) && (p.x <= r.rx)) && ((r.ty <= p.y) && (p.y <= r.by));
 }
 
 const rectanglesCollide = (r1, r2) => {
@@ -104,24 +104,24 @@ const rectanglesCollide = (r1, r2) => {
     return false;
 }
 
-const isColliding = (clx, cty) => {
-    let r2 = {
+const hasAnyCollision = (clx, cty, crx, cby) => {
+    let rc = {
         'lx': clx,
         'ty': cty,
-        'rx': clx + customerSize,
-        'by': cty + customerSize
+        'rx': crx,
+        'by': cby
     }
 
-    let r1;
+    let ro;
     for (let o of obstaclesLive) {
-        r1 = {
+        ro = {
             'lx': o[0],
             'ty': o[1],
             'rx': o[2],
             'by': o[3]
         }
 
-        if (rectanglesCollide(r1, r2)) {
+        if (rectanglesCollide(ro, rc)) {
             return true;
         }
     }
@@ -130,6 +130,8 @@ const isColliding = (clx, cty) => {
 };
 
 const spawnCustomer = () => {
+    let nAttempts = 0;
+
     let left = Random.random(0, vW - customerSize);
     let top = Random.random(0, vH - customerSize);
 
@@ -137,7 +139,7 @@ const spawnCustomer = () => {
     // ctxStore.strokeStyle = '#ff0000';
     // ctxStore.strokeRect(left, top, customerSize, customerSize);
 
-    if (isColliding(left, top)) {
+    while ((nAttempts < 10) && (hasAnyCollision(left, top, left + customerSize, top + customerSize))) {
 
         // debugging
         // clearInterval(spawnInterval);
@@ -146,14 +148,21 @@ const spawnCustomer = () => {
 
         left = Random.random(0, vW - customerSize);
         top = Random.random(0, vH - customerSize);
+        nAttempts++;
     }
 
-    let customer = [left, top, left + customerSize, top + customerSize];
-    obstaclesLive.push(customer);
-    customers.push(customer);
-
-    ctxCustomers.drawImage(imgCustomer, left, top, customerSize, customerSize);
+    if (nAttempts < 10) {
+        obstaclesLive.push([left, top, left + customerSize, top + customerSize]);
+        customers.push({x: left, y: top});
+    }
 };
+
+const drawGame = () => {
+    ctxCustomers.clearRect(0, 0, vW, vH);
+    for (let c of customers) {
+        ctxCustomers.drawImage(imgCustomer, c.x, c.y, customerSize, customerSize);
+    }
+}
 
 const showMousePos = (e) => {
     console.log(e.clientX, e.clientY);
@@ -192,3 +201,4 @@ $('#muteSound').click(toggleMuteMusic);
 $("#play-button").click(openGameScreen);
 
 var spawnInterval;
+var refreshInterval;
