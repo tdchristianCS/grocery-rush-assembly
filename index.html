@@ -74,19 +74,16 @@
     </div>
 
     <div id="gameScreen" class="hide screen menu">
-        <div id="gameBackgroundLayer" class="layer">
-            <img id="gameBackground"
-                 src="assets/Store-Floor.png">
+        <canvas id="gameCanvas1" class="canvas"></canvas>
+        <canvas id="gameCanvas2" class="canvas"></canvas>
+        <canvas id="gameCanvas3" class="canvas"></canvas>
         </div>
 
-        <div id="customerLayer" class="layer"></div>
-        <div id="storeBackgroundLayer" class="layer">
-            <img id="storeBackground"
-                 src="assets/StoreItems.png">
-        </div>
-    </div>
-    <!--Game Screen Information-->
 </div>
+
+<img src="assets/StoreItems.png" class="hide img-canvas" id="img-bg">
+<img src="assets/Store-Floor.png" class="hide img-canvas" id="img-store">
+<img src="assets/customer.png" class="hide img-canvas" id="img-customer">
 
 <!-- partial -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

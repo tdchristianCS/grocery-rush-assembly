@@ -1,3 +1,6 @@
+const vW = Window.innerWidth;
+const vH = Window.innerHeight;
+
 const obstaclesFixed = [
     [1200, 360, 1600, 545],
     [965, 65, 1090, 220],
@@ -7,13 +10,22 @@ const obstaclesFixed = [
     [961, 637, 1069, 700],
     [1170, 631, 1613, 703],
 ];
-
 var obstaclesLive = obstaclesFixed.splice();
+
+const canvasBG = $('#gameCanvas1').get(0);
+const ctxBG = canvasBG.getContext('2d');
+
+const canvasCustomers = $('#gameCanvas2').get(0);
+const ctxCustomers = canvasCustomers.getContext('2d');
+
+const canvasStore = $('#gameCanvas3').get(0);
+const ctxStore = canvasStore.getContext('2d');
+
 
 const customerSize = 200;
 
 const backgroundMusic = new Audio(
-    "https://t.sawczak.com/misc_assets/ics-hosting/jc-001.mp3"
+    "assets/music.mp3"
 ); // Music by Krzysztof Szymanski sourced from Pixaby
 backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
@@ -33,6 +45,10 @@ const openGameScreen = () => {
     hide($('#startScreen'));
     show($('#gameScreen'));
 
+
+
+    ctxBG.drawImage($('#img-bg').get(0), 0, 0, vW, vH);
+    ctxStore.drawImage($('#img-store').get(0), 0, 0, vW, vH);
     spawnInterval = setInterval(spawnCustomer, 1_000);
 };
 
@@ -83,48 +99,47 @@ const isColliding = (cty, clx) => {
     let r1lx, r1ty, r1rx, r1by;
     for (let obstacle of obstaclesLive) {
         [r1lx, r1ty, r1rx, r1by] = obstacle;
-        if (rectanglesCollide(r1lx, r1ty, r1rx, r1by, clx, cty, clx + cw, cty + ch))
-        {
+        if (rectanglesCollide(r1lx, r1ty, r1rx, r1by, clx, cty, clx + cw, cty + ch)) {
             return true;
         }
     }
     return false;
 };
 
-    const showMousePos = (e) => {
-        console.log(e.clientX, e.clientY);
-    }
+const showMousePos = (e) => {
+    console.log(e.clientX, e.clientY);
+}
 
-    $('body').mousemove(showMousePos);
+$('body').mousemove(showMousePos);
 
-    const useMusic = () => {
-        console.log("Sound Succesfull");
-        backgroundMusic.play();
-    };
-    const handleVolumeUpdate = (e) => {
-        let value = parseInt(e.target.value);
-        $('#volume-display').text(value);
-        backgroundMusic.volume = value / 100;
-        musicLastVolume = value / 100;
+const useMusic = () => {
+    console.log("Sound Succesfull");
+    backgroundMusic.play();
+};
+const handleVolumeUpdate = (e) => {
+    let value = parseInt(e.target.value);
+    $('#volume-display').text(value);
+    backgroundMusic.volume = value / 100;
+    musicLastVolume = value / 100;
+}
+$(document).ready(function () {
+    $('#volume').change(handleVolumeUpdate);
+});
+const toggleMuteMusic = () => {
+    if (musicIsMuted) {
+        musicIsMuted = false;
+        backgroundMusic.volume = musicLastVolume;
+        $('#muteSound').text('Mute');
+    } else {
+        musicIsMuted = true;
+        backgroundMusic.volume = 0;
+        $('#muteSound').text('Unmute');
     }
-    $(document).ready(function () {
-        $('#volume').change(handleVolumeUpdate);
-    });
-    const toggleMuteMusic = () => {
-        if (musicIsMuted) {
-            musicIsMuted = false;
-            backgroundMusic.volume = musicLastVolume;
-            $('#muteSound').text('Mute');
-        } else {
-            musicIsMuted = true;
-            backgroundMusic.volume = 0;
-            $('#muteSound').text('Unmute');
-        }
-    }
+}
 
 //Runs the code
-    $("#play-button").click(useMusic)
-    $('#muteSound').click(toggleMuteMusic);
-    $("#play-button").click(openGameScreen);
+$("#play-button").click(useMusic)
+$('#muteSound').click(toggleMuteMusic);
+$("#play-button").click(openGameScreen);
 
-    var spawnInterval;
+var spawnInterval;
