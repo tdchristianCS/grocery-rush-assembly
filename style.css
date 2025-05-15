@@ -55,11 +55,6 @@ h1, h4, h3, p {
     width: var(--screen-w);
     object-fit: contain;
 }
-/*@media screen and (min-width: 1281px) {*/
-/*    #startImg {*/
-/*        object-fit: cover;*/
-/*    }*/
-/*}*/
 
 #startImgLink, #startImg, .menu {
     position: absolute;
