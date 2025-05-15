@@ -13,6 +13,9 @@
     flex-direction: column;
     justify-content: center;
 }
+.flex-col.flex-col-start {
+    justify-content: start;
+}
 a {
     flex-shrink: 1;
     display: block;
@@ -24,14 +27,12 @@ a {
 body {
     margin: 0;
     background-color: white;
-    --screen-w: calc(100vw - 0px);
-    --screen-h: calc(100vh + 0px);
+    --screen-w: 1440px; /* calc(100vw - 0px); */
+    --screen-h: 900px; /* calc(100vh + 0px); */
     /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
 }
-.screen, .layer {
-    /*background-color: black;*/
+.screen, .layer, .canvas {
     box-sizing: border-box;
-    /*max-width: 700px;*/
     width: var(--screen-w);
     height: var(--screen-h);
     position: absolute;
@@ -39,17 +40,10 @@ body {
     left: 0;
 }
 
-.img-canvas {
-    /*height: var(--screen-h);*/
-    /*width: var(--screen-w);*/
-    width: 1400px;
-    height: 900px;
-    object-fit: contain;
-}
-
 #app {
     width: var(--screen-w);
     height: var(--screen-h);
+    position: relative;
 }
 h1, h4, h3, p {
     text-align: center;
@@ -61,14 +55,11 @@ h1, h4, h3, p {
     width: var(--screen-w);
     object-fit: contain;
 }
-@media screen and (min-width: 1281px) {
-    #startImg {
-        object-fit: cover;
-    }
-}
-#startScreen {
-    position: relative;
-}
+/*@media screen and (min-width: 1281px) {*/
+/*    #startImg {*/
+/*        object-fit: cover;*/
+/*    }*/
+/*}*/
 
 #startImgLink, #startImg, .menu {
     position: absolute;
@@ -77,8 +68,8 @@ h1, h4, h3, p {
 }
 
 #welcomeMenu {
-    left: 0.5%;
-    top: 50vh;
+    left: 50px;
+    top: calc(0.5 * var(--screen-h));
 }
 
 #play-button {
@@ -86,10 +77,8 @@ h1, h4, h3, p {
     border: none;
     outline: none;
     border-radius: 19px;
-    /*font-size: 4rem;*/
-    font-size: 5vh;
+    font-size: 3rem;
     display: block;
-    /*margin: 1px auto;*/
     min-height: 70px;
     width: 100px;
     color: black;
@@ -117,21 +106,6 @@ button:hover::before {
     color: white;
 }
 
-/*img {*/
-/*    box-sizing: border-box;*/
-/*    background-repeat: no-repeat;*/
-/*    background-size: var(--screen-w) var(--screen-h);*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    object-fit: contain;*/
-/*}*/
-
-.canvas {
-    width: calc(1 * var(--screen-w));
-    height: calc(1 * var(--screen-h));
-    position: absolute;
-}
-
 #gameCanvas1 {;
     z-index: 1;
 }
@@ -143,40 +117,3 @@ button:hover::before {
 #gameCanvas3 {
     z-index: 3;
 }
-
-.customer {
-    /*width: 200px;*/
-    /*height: 200px;*/
-    position: absolute;
-}
-
-    #gameBackground {
-        height: var(--screen-h);
-        width: var(--screen-w);
-        object-fit: contain;
-    }
-
-    @media screen and (min-width: 1281px) {
-        #gameBackground {
-            object-fit: cover;
-        }
-    }
-
-    #storeBackground {
-        box-sizing: border-box;
-        background-repeat: no-repeat;
-        margin: 1px auto;
-        /*padding: 1px;*/
-        background-size: cover;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    #gameScreen {
-        position: relative;
-    }
-

@@ -5,89 +5,83 @@
     <title>Grocery Rush</title>
     <link rel="stylesheet" href="./style.css"/>
     <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"quokka"-->
-    <link rel="stylesheet" href="https://use.typekit.net/gtj4zzr.css"><!--"receipt-narrow"-->
 </head>
 
 <body>
-<div class="flex-col" id="app">
+<div class="flex-col flex-col-start" id="app">
     <div id="startScreen" class="screen">
-        <a id="startImgLink">
-            <img id="startImg"
-                 src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush.png">
-        </a>
-    </div>
+        <div id="startBG" class="layer">
+            <a id="startImgLink">
+                <img id="startImg"
+                     src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush_2.png">
+            </a>
+        </div>
+        <!-- Welcome Screen -->
+        <div class="screen menu" id="welcomeMenu">
+            <button class="button" id="play-button">PLAY</button>
+        </div>
 
-    <!-- Welcome Screen -->
-    <div class="screen menu" id="welcomeMenu">
-        <button class="button" id="play-button">PLAY</button>
-    </div>
 
-
-    <!-- Instruction Screen-->
-    <div class="hide screen menu" id="instructions">
-        <h3>
-            "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
-            the highest score possible. Each day, customers will arrive at the store with different
-            requests. Depending on the service provided, customers will pay different amount of money.
-            The better the service, the more money a player will collect. This money can be used to buy
-            upgrades which help the store run smoother.
-            .
-        </h3>
-        <h4>Controls:</h4>
-        <p>
-            Move your player using arrow keys. To grab an item, tap and drag to
-            desired location.
-        </p>
-        <p class="footer">
-            <button class="button" data-screen="menu" id="returnButton">
-                Back to Menu
-            </button>
-        </p>
-    </div>
-    <!-- Settings Screen -->
-    <div class="hide screen menu" id="settings">
-        <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-        <button class="button" id="soundButton">Sound</button>
-        <button class="button" id="controls">Controls</button>
-        <button class="button" id="backtoMenu">Close Settings</button>
-    </div>
-    <!--Sound Control Screen-->
-    <div class="hide screen menu" id="soundControl">
-        <div class="demo">
-            <div class="flex-col">
-                <div class="flex-row">
-                    <div class="range-slider">
-                        <input id='volume' type="range" value="50" min="0" max="100" range="true">
-                    </div>
-                    <div class="flex-col">
-                        <div class="range-value" id="volume-display">50</div>
+        <!-- Instruction Screen-->
+        <div class="hide screen menu" id="instructions">
+            <h3>
+                "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
+                the highest score possible. Each day, customers will arrive at the store with different
+                requests. Depending on the service provided, customers will pay different amount of money.
+                The better the service, the more money a player will collect. This money can be used to buy
+                upgrades which help the store run smoother.
+                .
+            </h3>
+            <h4>Controls:</h4>
+            <p>
+                Move your player using arrow keys. To grab an item, tap and drag to
+                desired location.
+            </p>
+            <p class="footer">
+                <button class="button" data-screen="menu" id="returnButton">
+                    Back to Menu
+                </button>
+            </p>
+        </div>
+        <!-- Settings Screen -->
+        <div class="hide screen menu" id="settings">
+            <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
+            <button class="button" id="soundButton">Sound</button>
+            <button class="button" id="controls">Controls</button>
+            <button class="button" id="backtoMenu">Close Settings</button>
+        </div>
+        <!--Sound Control Screen-->
+        <div class="hide screen menu" id="soundControl">
+            <div class="demo">
+                <div class="flex-col">
+                    <div class="flex-row">
+                        <div class="range-slider">
+                            <input id='volume' type="range" value="50" min="0" max="100" range="true">
+                        </div>
+                        <div class="flex-col">
+                            <div class="range-value" id="volume-display">50</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="flex-row">
-                <button class="button" id="muteSound">Mute</button>
-            </div>
-            <div class="flex-row">
-                <button class="button" id="returntoMenu">Close Sound Settings</button>
+                <div class="flex-row">
+                    <button class="button" id="muteSound">Mute</button>
+                </div>
+                <div class="flex-row">
+                    <button class="button" id="returntoMenu">Close Sound Settings</button>
+                </div>
             </div>
         </div>
     </div>
-
     <div id="gameScreen" class="hide screen menu">
         <canvas id="gameCanvas1" class="canvas"></canvas>
         <canvas id="gameCanvas2" class="canvas"></canvas>
         <canvas id="gameCanvas3" class="canvas"></canvas>
-        </div>
-
+    </div>
 </div>
-
-<img src="assets/StoreItems.png" class="hide img-canvas" id="img-bg">
-<img src="assets/Store-Floor.png" class="hide img-canvas" id="img-store">
-<img src="assets/customer.png" class="hide img-canvas" id="img-customer">
 
 <!-- partial -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://g.sawczak.com/web-tools/js/app-tools.js"></script>
+<script src="https://g.sawczak.com/web-tools/js/toolbox.js"></script>
 <script src="./script.js"></script>
 </body>
 

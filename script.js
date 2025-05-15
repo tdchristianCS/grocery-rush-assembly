@@ -1,5 +1,5 @@
-const vW = Window.innerWidth;
-const vH = Window.innerHeight;
+const vW = 1440; // Window.innerWidth;
+const vH = 900; // Window.innerHeight;
 
 const obstaclesFixed = [
     [1200, 360, 1600, 545],
@@ -12,6 +12,8 @@ const obstaclesFixed = [
 ];
 var obstaclesLive = obstaclesFixed.splice();
 
+const customerSize = 200;
+
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
 
@@ -21,8 +23,20 @@ const ctxCustomers = canvasCustomers.getContext('2d');
 const canvasStore = $('#gameCanvas3').get(0);
 const ctxStore = canvasStore.getContext('2d');
 
+const imgBG = new Image();
+imgBG.src = 'assets/Store-Floor.png';
+imgBG.width = vW;
+imgBG.height = vH;
 
-const customerSize = 200;
+const imgStore = new Image();
+imgStore.src = 'assets/StoreItems.png';
+imgStore.width = vW;
+imgStore.height = vH;
+
+const imgCustomer = new Image();
+imgCustomer.src = 'assets/customer.png';
+imgCustomer.width = 200;
+imgCustomer.height = 200;
 
 const backgroundMusic = new Audio(
     "assets/music.mp3"
@@ -47,17 +61,17 @@ const openGameScreen = () => {
 
 
 
-    ctxBG.drawImage($('#img-bg').get(0), 0, 0, vW, vH);
-    ctxStore.drawImage($('#img-store').get(0), 0, 0, vW, vH);
+    ctxBG.drawImage(imgBG, 0, 0);//, vW, vH);
+    ctxStore.drawImage(imgStore, 0, 0);//, vW, vH);
     spawnInterval = setInterval(spawnCustomer, 1_000);
 };
 
 const spawnCustomer = () => {
-    let left = Tools.random(0, 100);
-    let top = Tools.random(0, 100);
+    let left = Random.random(0, 100);
+    let top = Random.random(0, 100);
     while (isColliding(top, left)) {
-        left = Tools.random(0, 100);
-        top = Tools.random(0, 100);
+        left = Random.random(0, 100);
+        top = Random.random(0, 100);
     }
 
     obstaclesLive.push([left, top, left + customerSize, top + customerSize]);
@@ -110,7 +124,7 @@ const showMousePos = (e) => {
     console.log(e.clientX, e.clientY);
 }
 
-$('body').mousemove(showMousePos);
+// $('body').mousemove(showMousePos);
 
 const useMusic = () => {
     console.log("Sound Succesfull");
