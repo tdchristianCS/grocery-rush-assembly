@@ -16,7 +16,7 @@ var obstaclesLive = obstaclesFixed.splice(0);
 var customers = [];
 
 const customerSize = 100;
-const customerSpawnRate = 2_000;
+const customerSpawnRate = 500;
 
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
@@ -66,14 +66,18 @@ const openGameScreen = () => {
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
 
     // debug
-    ctxStore.strokeStyle = 'ff0000';
-    for (let obstacle of obstaclesLive) {
-        [a, b, c, d] = obstacle;
-        ctxStore.strokeRect(a, b, c - a, d - b);
-    }
+    // ctxStore.strokeStyle = 'ff0000';
+    // for (let obstacle of obstaclesLive) {
+    //     [a, b, c, d] = obstacle;
+    //     ctxStore.strokeRect(a, b, c - a, d - b);
+    // }
 };
 
 const pointIsInRectangle = (p, r) => {
+    console.log(p);
+    console.log(r);
+    console.log((r.lx <= p.x) && (p.x <= r.rx) && (r.ty <= p.y) && (p.y <= r.by));
+    console.log('    ');
     return (r.lx <= p.x) && (p.x <= r.rx) && (r.ty <= p.y) && (p.y <= r.by);
 }
 
@@ -92,7 +96,7 @@ const rectanglesCollide = (r1, r2) => {
             y: corner[1]
         }
 
-        if (pointIsInRectangle(point, r2)) {
+        if (pointIsInRectangle(point, r1)) {
             return true;
         }
     }
@@ -101,52 +105,48 @@ const rectanglesCollide = (r1, r2) => {
 }
 
 const isColliding = (clx, cty) => {
-    let cw = customerSize;
-    let ch = customerSize;
-
-    let r1 = {
+    let r2 = {
         'lx': clx,
         'ty': cty,
         'rx': clx + customerSize,
         'by': cty + customerSize
     }
 
-    let r2;
-    for (let obstacle of obstaclesLive) {
-        [olx, oty, orx, oby] = obstacle;
-        r2 = {
-            'lx': olx,
-            'ty': oty,
-            'rx': orx,
-            'by': oby
+    let r1;
+    for (let o of obstaclesLive) {
+        r1 = {
+            'lx': o[0],
+            'ty': o[1],
+            'rx': o[2],
+            'by': o[3]
         }
 
         if (rectanglesCollide(r1, r2)) {
             return true;
         }
     }
+
     return false;
 };
 
 const spawnCustomer = () => {
-    console.log('obstacles live', obstaclesLive);
-
     let left = Random.random(0, vW - customerSize);
     let top = Random.random(0, vH - customerSize);
 
-    ctxStore.strokeStyle = '#ff0000';
-    ctxStore.strokeRect(left, top, customerSize, customerSize);
+    // debugging
+    // ctxStore.strokeStyle = '#ff0000';
+    // ctxStore.strokeRect(left, top, customerSize, customerSize);
 
-    // if (isColliding(left, top)) {
-    //
-    //     // debugging
-    //     clearInterval(spawnInterval);
-    //     console.log('attempted', left, top, left + customerSize, top + customerSize);
-    //     return;
-    //
-    //     left = Random.random(0, vW - customerSize);
-    //     top = Random.random(0, vH - customerSize);
-    // }
+    if (isColliding(left, top)) {
+
+        // debugging
+        // clearInterval(spawnInterval);
+        // console.log('attempted', left, top, left + customerSize, top + customerSize);
+        // return;
+
+        left = Random.random(0, vW - customerSize);
+        top = Random.random(0, vH - customerSize);
+    }
 
     let customer = [left, top, left + customerSize, top + customerSize];
     obstaclesLive.push(customer);
