@@ -2,17 +2,21 @@ const vW = 1440; // Window.innerWidth;
 const vH = 900; // Window.innerHeight;
 
 const obstaclesFixed = [
-    [1200, 360, 1600, 545],
-    [965, 65, 1090, 220],
-    [953, 323, 1071, 599],
-    [1198, 69, 1615, 284],
-    [1717, 484, 1795, 702],
-    [961, 637, 1069, 700],
-    [1170, 631, 1613, 703],
+    [70, 70, 265, 260],
+    [290, 115, 365, 265],
+    [404, 80, 975, 305],
+    [65, 380, 235, 840],
+    [405, 425, 960, 650],
+    [360, 735, 980, 840],
+    [1115, 555, 1230, 840],
 ];
-var obstaclesLive = obstaclesFixed.splice();
 
-const customerSize = 200;
+var obstaclesLive = obstaclesFixed.splice(0);
+
+var customers = [];
+
+const customerSize = 100;
+const customerSpawnRate = 2_000;
 
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
@@ -47,8 +51,6 @@ backgroundMusic.volume = 0.5;
 let musicLastVolume = backgroundMusic.volume;
 let musicIsMuted = false;
 
-const customerURL = "assets/customer.png"
-const customerIMG = `<img src="${customerURL}" class="customer">`;
 const hide = (el) => {
     el.addClass('hide');
 };
@@ -59,46 +61,38 @@ const openGameScreen = () => {
     hide($('#startScreen'));
     show($('#gameScreen'));
 
+    ctxBG.drawImage(imgBG, 0, 0, vW, vH);
+    ctxStore.drawImage(imgStore, 0, 0, vW, vH);
+    spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
 
-
-    ctxBG.drawImage(imgBG, 0, 0);//, vW, vH);
-    ctxStore.drawImage(imgStore, 0, 0);//, vW, vH);
-    spawnInterval = setInterval(spawnCustomer, 1_000);
-};
-
-const spawnCustomer = () => {
-    let left = Random.random(0, 100);
-    let top = Random.random(0, 100);
-    while (isColliding(top, left)) {
-        left = Random.random(0, 100);
-        top = Random.random(0, 100);
+    // debug
+    ctxStore.strokeStyle = 'ff0000';
+    for (let obstacle of obstaclesLive) {
+        [a, b, c, d] = obstacle;
+        ctxStore.strokeRect(a, b, c - a, d - b);
     }
-
-    obstaclesLive.push([left, top, left + customerSize, top + customerSize]);
-
-    let style = `left: ${left}%; top: ${top}%; width: ${customerSize}px; height: ${customerSize}px;`;
-
-    let html = `<img src="${customerURL}" class="customer" style="${style}">`
-    $("#customerLayer").append(html);
-    // console.log(left, top);
 };
 
-const pointIsInRectangle = (px, py, rlx, rty, rrx, rby) => {
-    return (rlx < px) && (px < rrx) && (rty < py) && (py < rby);
+const pointIsInRectangle = (p, r) => {
+    return (r.lx <= p.x) && (p.x <= r.rx) && (r.ty <= p.y) && (p.y <= r.by);
 }
 
-const rectanglesCollide = (r1lx, r1ty, r1rx, r1by, r2lx, r2ty, r2rx, r2by) => {
+const rectanglesCollide = (r1, r2) => {
     let corners = [
-        [r2lx, r2ty],
-        [r2rx, r2ty],
-        [r2lx, r2by],
-        [r2rx, r2by],
+        [r2.lx, r2.ty],
+        [r2.rx, r2.ty],
+        [r2.lx, r2.by],
+        [r2.rx, r2.by],
     ];
 
-    let px, py;
+    let point;
     for (let corner of corners) {
-        [px, py] = corner;
-        if (pointIsInRectangle(px, py, r1lx, r1ty, r1rx, r1by)) {
+        point = {
+            x: corner[0],
+            y: corner[1]
+        }
+
+        if (pointIsInRectangle(point, r2)) {
             return true;
         }
     }
@@ -106,18 +100,59 @@ const rectanglesCollide = (r1lx, r1ty, r1rx, r1by, r2lx, r2ty, r2rx, r2by) => {
     return false;
 }
 
-const isColliding = (cty, clx) => {
+const isColliding = (clx, cty) => {
     let cw = customerSize;
     let ch = customerSize;
 
-    let r1lx, r1ty, r1rx, r1by;
+    let r1 = {
+        'lx': clx,
+        'ty': cty,
+        'rx': clx + customerSize,
+        'by': cty + customerSize
+    }
+
+    let r2;
     for (let obstacle of obstaclesLive) {
-        [r1lx, r1ty, r1rx, r1by] = obstacle;
-        if (rectanglesCollide(r1lx, r1ty, r1rx, r1by, clx, cty, clx + cw, cty + ch)) {
+        [olx, oty, orx, oby] = obstacle;
+        r2 = {
+            'lx': olx,
+            'ty': oty,
+            'rx': orx,
+            'by': oby
+        }
+
+        if (rectanglesCollide(r1, r2)) {
             return true;
         }
     }
     return false;
+};
+
+const spawnCustomer = () => {
+    console.log('obstacles live', obstaclesLive);
+
+    let left = Random.random(0, vW - customerSize);
+    let top = Random.random(0, vH - customerSize);
+
+    ctxStore.strokeStyle = '#ff0000';
+    ctxStore.strokeRect(left, top, customerSize, customerSize);
+
+    // if (isColliding(left, top)) {
+    //
+    //     // debugging
+    //     clearInterval(spawnInterval);
+    //     console.log('attempted', left, top, left + customerSize, top + customerSize);
+    //     return;
+    //
+    //     left = Random.random(0, vW - customerSize);
+    //     top = Random.random(0, vH - customerSize);
+    // }
+
+    let customer = [left, top, left + customerSize, top + customerSize];
+    obstaclesLive.push(customer);
+    customers.push(customer);
+
+    ctxCustomers.drawImage(imgCustomer, left, top, customerSize, customerSize);
 };
 
 const showMousePos = (e) => {
@@ -127,7 +162,7 @@ const showMousePos = (e) => {
 // $('body').mousemove(showMousePos);
 
 const useMusic = () => {
-    console.log("Sound Succesfull");
+    // console.log("Sound Succesfull");
     backgroundMusic.play();
 };
 const handleVolumeUpdate = (e) => {

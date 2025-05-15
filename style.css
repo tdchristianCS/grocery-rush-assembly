@@ -31,8 +31,7 @@ body {
     --screen-h: 900px; /* calc(100vh + 0px); */
     /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
 }
-.screen, .layer, .canvas {
-    box-sizing: border-box;
+.screen, .layer, .gameCanvas {
     width: var(--screen-w);
     height: var(--screen-h);
     position: absolute;
