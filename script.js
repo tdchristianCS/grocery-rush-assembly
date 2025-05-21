@@ -15,6 +15,8 @@ var obstaclesLive = obstaclesFixed.splice(0);
 
 var customers = [];
 
+const helloSound = new Audio(src = "assets/hello-87032.mp3")
+
 const customerSize = 100;
 const customerSpawnRate = 500;
 const refreshRate = 1_000 / 60;
@@ -66,7 +68,7 @@ const openGameScreen = () => {
     ctxBG.drawImage(imgBG, 0, 0, vW, vH);
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
-    refreshInterval = setInterval(drawGame, refreshRate);
+    refreshInterval = setInterval(updateGame, refreshRate);
 
 
     // debug
@@ -152,10 +154,78 @@ const spawnCustomer = () => {
     }
 
     if (nAttempts < 10) {
+        console.log('spoawned customer');
         obstaclesLive.push([left, top, left + customerSize, top + customerSize]);
-        customers.push({x: left, y: top});
+        customers.push({x: left, y: top, movedir: Random.randomChoice(['N', 'E', 'S', 'W'])});
     }
-};
+}
+
+const popValue = (arr, val) => {
+    let index = arr.indexOf(val);
+    if (index !== -1) {
+        arr.splice(index, 1);
+    }
+}
+
+const moveCustomer = (customer) => {
+    let success = false;
+    let md = customer.movedir;
+    let x = customer.x;
+    let y = customer.y;
+
+    if (md === 'E') {
+        x += 1;
+    } else if (md === 'W') {
+        x -= 1;
+    } else if (md === 'N') {
+        y -= 1;
+    } else {
+        y += 1;
+    }
+
+    if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
+        success = true;
+    } else {
+        let possibleDirections = ['N', 'E', 'S', 'W'];
+        popValue(possibleDirections, md);
+
+        while ((!success) && (possibleDirections.length > 0)) {
+            md = Random.randomChoice(possibleDirections);
+            popValue(possibleDirections, md);
+            x = customer.x;
+            y = customer.y;
+
+            if (md === 'E') {
+                x += 1;
+            } else if (md === 'W') {
+                x -= 1;
+            } else if (md === 'N') {
+                y -= 1;
+            } else {
+                y += 1;
+            }
+
+            if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
+                success = true;
+            }
+        }
+    }
+
+    if (success) {
+        customer.movedir = md;
+        customer.x = x;
+        customer.y = y;
+
+    }
+
+}
+const updateGame = () => {
+    for (let customer of customers) {
+        moveCustomer(customer);
+    }
+    drawGame();
+
+}
 
 const drawGame = () => {
     ctxCustomers.clearRect(0, 0, vW, vH);
@@ -199,6 +269,7 @@ const toggleMuteMusic = () => {
 $("#play-button").click(useMusic)
 $('#muteSound').click(toggleMuteMusic);
 $("#play-button").click(openGameScreen);
+
 
 var spawnInterval;
 var refreshInterval;
