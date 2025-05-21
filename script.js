@@ -160,71 +160,51 @@ const spawnCustomer = () => {
     }
 }
 
-const popValue = (arr, val) => {
-    let index = arr.indexOf(val);
-    if (index !== -1) {
-        arr.splice(index, 1);
-    }
-}
-
-const moveCustomer = (customer) => {
-    let success = false;
-    let md = customer.movedir;
-    let x = customer.x;
-    let y = customer.y;
-
+const getXYFromMoveDirection = (md, x, y) => {
     if (md === 'E') {
         x += 1;
     } else if (md === 'W') {
         x -= 1;
     } else if (md === 'N') {
         y -= 1;
-    } else {
+    } else if (md === 'S') {
         y += 1;
     }
 
-    if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
-        success = true;
-    } else {
-        let possibleDirections = ['N', 'E', 'S', 'W'];
-        popValue(possibleDirections, md);
+    return [x, y];
+}
 
-        while ((!success) && (possibleDirections.length > 0)) {
-            md = Random.randomChoice(possibleDirections);
-            popValue(possibleDirections, md);
-            x = customer.x;
-            y = customer.y;
+const moveCustomer = (customer) => {
+    // Randomize possible directions
+    let directions = ['N', 'E', 'S', 'W'];
+    Random.shuffle(directions);
 
-            if (md === 'E') {
-                x += 1;
-            } else if (md === 'W') {
-                x -= 1;
-            } else if (md === 'N') {
-                y -= 1;
-            } else {
-                y += 1;
-            }
+    // Move the customer's actual direction to the front of the list so they try that first
+    JSTools.removeFromArray(directions, customer.movedir);
+    directions.splice(0, 0, customer.movedir);
 
-            if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
-                success = true;
-            }
+    // Try all the directions
+    let x, y;
+    for (let md of directions) {
+        [x, y] = getXYFromMoveDirection(md, customer.x, customer.y);
+        if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
+            customer.x = x;
+            customer.y = y;
+            customer.movedir = md;
+            return;
         }
     }
 
-    if (success) {
-        customer.movedir = md;
-        customer.x = x;
-        customer.y = y;
-
-    }
-
+    // No?
+    console.log('Customer was unable to move');
 }
+
 const updateGame = () => {
     for (let customer of customers) {
         moveCustomer(customer);
     }
-    drawGame();
 
+    drawGame();
 }
 
 const drawGame = () => {
