@@ -11,13 +11,14 @@ const obstaclesFixed = [
     [1115, 555, 1230, 840],
 ];
 
-var obstaclesLive = obstaclesFixed.splice(0);
-
 var customers = [];
 
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
 const customerSize = 100;
+const customerSpeed = 1;
+const maxCustomers = 100;
+
 const customerSpawnRate = 500;
 const refreshRate = 1_000 / 60;
 
@@ -69,15 +70,15 @@ const openGameScreen = () => {
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
     refreshInterval = setInterval(updateGame, refreshRate);
-
-
-    // debug
-    // ctxStore.strokeStyle = 'ff0000';
-    // for (let obstacle of obstaclesLive) {
-    //     [a, b, c, d] = obstacle;
-    //     ctxStore.strokeRect(a, b, c - a, d - b);
-    // }
 };
+
+const getLiveObstacles = () => {
+    let obstacles = [...obstaclesFixed];
+    for (let c of customers) {
+        obstacles.push([c.x, c.y, c.x + customerSize, c.y + customerSize]);
+    }
+    return obstacles;
+}
 
 const pointIsInRectangle = (p, r) => {
     return ((r.lx <= p.x) && (p.x <= r.rx)) && ((r.ty <= p.y) && (p.y <= r.by));
@@ -106,24 +107,36 @@ const rectanglesCollide = (r1, r2) => {
     return false;
 }
 
-const hasAnyCollision = (clx, cty, crx, cby) => {
-    let rc = {
-        'lx': clx,
-        'ty': cty,
-        'rx': crx,
-        'by': cby
-    }
+const canMoveHere = (rc, ignoreRect) => {
+    return [
+        rc.lx >= 0,
+        rc.ty >= 0,
+        rc.lx <= (vW - (rc.rx - rc.lx)),
+        rc.by <= (vH - (rc.by - rc.ty)),
+        !hasAnyCollision(rc, ignoreRect)
+    ].every(Boolean);
+}
 
-    let ro;
-    for (let o of obstaclesLive) {
-        ro = {
+const hasAnyCollision = (rectCollider, rectIgnore) => {
+    // Tiny optimization
+    let ignoreMode = (typeof rectIgnore !== 'undefined');
+
+    let rectObstacle;
+    for (let o of getLiveObstacles()) {
+        rectObstacle = {
             'lx': o[0],
             'ty': o[1],
             'rx': o[2],
             'by': o[3]
         }
 
-        if (rectanglesCollide(ro, rc)) {
+        // Skip a rectangle being ignored
+        if (ignoreMode && (JSON.stringify(rectObstacle) === JSON.stringify(rectIgnore))) {
+            continue;
+        }
+
+        // Check collision
+        if (rectanglesCollide(rectObstacle, rectCollider)) {
             return true;
         }
     }
@@ -131,47 +144,64 @@ const hasAnyCollision = (clx, cty, crx, cby) => {
     return false;
 };
 
+const rectFromCorners = (lx, ty, rx, by) => {
+    return {
+        'lx': lx,
+        'ty': ty,
+        'rx': rx,
+        'by': by
+    };
+}
+
+const rectFromCornerAndWH = (lx, ty, w, h) => {
+    return {
+        'lx': lx,
+        'ty': ty,
+        'rx': lx + w,
+        'by': ty + h
+    };
+}
+
+const rectForCustomer = (x, y) => {
+    return {
+        'lx': x,
+        'ty': y,
+        'rx': x + customerSize,
+        'by': y + customerSize
+    };
+}
+
 const spawnCustomer = () => {
+    if (customers.length >= maxCustomers) {
+        return;
+    }
+
     let nAttempts = 0;
 
-    let left = Random.random(0, vW - customerSize);
-    let top = Random.random(0, vH - customerSize);
+    let x = Random.integer(0, vW - customerSize);
+    let y = Random.integer(0, vH - customerSize);
 
-    // debugging
-    // ctxStore.strokeStyle = '#ff0000';
-    // ctxStore.strokeRect(left, top, customerSize, customerSize);
-
-    while ((nAttempts < 10) && (hasAnyCollision(left, top, left + customerSize, top + customerSize))) {
-
-        // debugging
-        // clearInterval(spawnInterval);
-        // console.log('attempted', left, top, left + customerSize, top + customerSize);
-        // return;
-
-        left = Random.random(0, vW - customerSize);
-        top = Random.random(0, vH - customerSize);
+    while ((nAttempts < 10) && (hasAnyCollision(rectForCustomer(x, y)))) {
+        left = Random.integer(0, vW - customerSize);
+        top = Random.integer(0, vH - customerSize);
         nAttempts++;
     }
 
     if (nAttempts < 10) {
-        console.log('spoawned customer');
-        obstaclesLive.push([left, top, left + customerSize, top + customerSize]);
-        customers.push({x: left, y: top, movedir: Random.randomChoice(['N', 'E', 'S', 'W'])});
+        customers.push({x: x, y: y, movedir: Random.choice(['N', 'E', 'S', 'W'])});
     }
 }
 
 const getXYFromMoveDirection = (md, x, y) => {
     if (md === 'E') {
-        x += 1;
+        return [x + customerSpeed, y];
     } else if (md === 'W') {
-        x -= 1;
+        return [x - customerSpeed, y];
     } else if (md === 'N') {
-        y -= 1;
+        return [x, y - customerSpeed];
     } else if (md === 'S') {
-        y += 1;
+        return [x, y + customerSpeed];
     }
-
-    return [x, y];
 }
 
 const moveCustomer = (customer) => {
@@ -183,11 +213,16 @@ const moveCustomer = (customer) => {
     JSTools.removeFromArray(directions, customer.movedir);
     directions.splice(0, 0, customer.movedir);
 
+    // Create a rectangle representing our current position to ignore for collision
+    let ownRect = rectForCustomer(customer.x, customer.y);
+
     // Try all the directions
-    let x, y;
+    let x, y, rectCollider;
     for (let md of directions) {
         [x, y] = getXYFromMoveDirection(md, customer.x, customer.y);
-        if (!hasAnyCollision(x, y, x + customerSize, y + customerSize)) {
+        rectCollider  = rectForCustomer(x, y);
+
+        if (canMoveHere(rectCollider, ownRect)) {
             customer.x = x;
             customer.y = y;
             customer.movedir = md;
@@ -224,6 +259,7 @@ const useMusic = () => {
     // console.log("Sound Succesfull");
     backgroundMusic.play();
 };
+
 const handleVolumeUpdate = (e) => {
     let value = parseInt(e.target.value);
     $('#volume-display').text(value);
@@ -233,6 +269,7 @@ const handleVolumeUpdate = (e) => {
 $(document).ready(function () {
     $('#volume').change(handleVolumeUpdate);
 });
+
 const toggleMuteMusic = () => {
     if (musicIsMuted) {
         musicIsMuted = false;
