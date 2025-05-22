@@ -18,11 +18,13 @@ const directions = [
     'ENE', 'WNW', 'ESE', 'WSW'
 ];
 
+const margin = 10;
+
 var customers = [];
 
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
-const customerSize = 100;
+const customerSize = 10;
 const customerSpeed = 1;
 const maxCustomers = 100;
 
@@ -115,11 +117,12 @@ const rectanglesCollide = (r1, r2) => {
 }
 
 const canMoveHere = (rc, ignoreRect) => {
+
     return [
-        rc.lx >= 0,
-        rc.ty >= 0,
-        rc.lx <= (vW - (rc.rx - rc.lx)),
-        rc.by <= (vH - (rc.by - rc.ty)),
+        rc.lx > margin,
+        rc.ty > margin,
+        rc.lx < (vW - (rc.rx - rc.lx) - margin),
+        rc.by < (vH - (rc.by - rc.ty) - margin),
         !hasAnyCollision(rc, ignoreRect)
     ].every(Boolean);
 }
@@ -185,12 +188,12 @@ const spawnCustomer = () => {
 
     let nAttempts = 0;
 
-    let x = Random.integer(0, vW - customerSize);
-    let y = Random.integer(0, vH - customerSize);
+    let x = Random.integer(margin, vW - customerSize - margin);
+    let y = Random.integer(margin, vH - customerSize - margin);
 
     while ((nAttempts < 10) && (hasAnyCollision(rectForCustomer(x, y)))) {
-        left = Random.integer(0, vW - customerSize);
-        top = Random.integer(0, vH - customerSize);
+        left = Random.integer(margin, vW - customerSize - margin);
+        top = Random.integer(margin, vH - customerSize - margin);
         nAttempts++;
     }
 
