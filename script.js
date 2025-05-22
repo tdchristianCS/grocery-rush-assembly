@@ -24,8 +24,8 @@ var customers = [];
 
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
-const customerSize = 10;
-const customerSpeed = 1;
+const customerSize = 100;
+const customerSpeed = 2;
 const maxCustomers = 100;
 
 const customerSpawnRate = 250;
