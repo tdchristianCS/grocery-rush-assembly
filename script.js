@@ -11,6 +11,13 @@ const obstaclesFixed = [
     [1115, 555, 1230, 840],
 ];
 
+const directions = [
+    'N', 'E', 'S', 'W',
+    'NE', 'NW', 'SE', 'SW',
+    'NNE', 'NNW', 'SSE', 'SSW',
+    'ENE', 'WNW', 'ESE', 'WSW'
+];
+
 var customers = [];
 
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
@@ -19,7 +26,7 @@ const customerSize = 100;
 const customerSpeed = 1;
 const maxCustomers = 100;
 
-const customerSpawnRate = 500;
+const customerSpawnRate = 250;
 const refreshRate = 1_000 / 60;
 
 const canvasBG = $('#gameCanvas1').get(0);
@@ -188,7 +195,7 @@ const spawnCustomer = () => {
     }
 
     if (nAttempts < 10) {
-        customers.push({x: x, y: y, movedir: Random.choice(['N', 'E', 'S', 'W'])});
+        customers.push({x: x, y: y, movedir: Random.choice(directions)});
     }
 }
 
@@ -201,24 +208,52 @@ const getXYFromMoveDirection = (md, x, y) => {
         return [x, y - customerSpeed];
     } else if (md === 'S') {
         return [x, y + customerSpeed];
+
+    } else if (md === 'NE') {
+        return [x + customerSpeed, y - customerSpeed];
+    } else if (md === 'NW') {
+        return [x - customerSpeed, y - customerSpeed];
+    } else if (md === 'SE') {
+        return [x + customerSpeed, y + customerSpeed];
+    } else if (md === 'SW') {
+        return [x - customerSpeed, y + customerSpeed];
+
+    }  else if (md === 'NNE') {
+        return [x + customerSpeed / 2, y - customerSpeed];
+    } else if (md === 'NNW') {
+        return [x - customerSpeed / 2, y - customerSpeed];
+    } else if (md === 'SSE') {
+        return [x + customerSpeed / 2, y + customerSpeed];
+    } else if (md === 'SSW') {
+        return [x - customerSpeed / 2, y + customerSpeed];
+    }
+
+      else if (md === 'ENE') {
+        return [x + customerSpeed, y - customerSpeed / 2];
+    } else if (md === 'WNW') {
+        return [x - customerSpeed, y - customerSpeed / 2];
+    } else if (md === 'ESE') {
+        return [x + customerSpeed, y + customerSpeed / 2];
+    } else if (md === 'WSW') {
+        return [x - customerSpeed, y + customerSpeed / 2];
     }
 }
 
 const moveCustomer = (customer) => {
     // Randomize possible directions
-    let directions = ['N', 'E', 'S', 'W'];
-    Random.shuffle(directions);
+    let possibleDirections = [...directions];
+    Random.shuffle(possibleDirections);
 
     // Move the customer's actual direction to the front of the list so they try that first
-    JSTools.removeFromArray(directions, customer.movedir);
-    directions.splice(0, 0, customer.movedir);
+    JSTools.removeFromArray(possibleDirections, customer.movedir);
+    possibleDirections.splice(0, 0, customer.movedir);
 
     // Create a rectangle representing our current position to ignore for collision
     let ownRect = rectForCustomer(customer.x, customer.y);
 
     // Try all the directions
     let x, y, rectCollider;
-    for (let md of directions) {
+    for (let md of possibleDirections) {
         [x, y] = getXYFromMoveDirection(md, customer.x, customer.y);
         rectCollider  = rectForCustomer(x, y);
 
