@@ -83,8 +83,21 @@ class Rectangle {
         return new Point(this.x + (this.w / 2), this.y + (this.h / 2));
     }
 
-    pointCollides(p) {
-        return ((this.lx <= p.x) && (p.x <= this.rx)) && ((this.ty <= p.y) && (p.y <= this.by));
+    pointCollides(p, xOffset, yOffset) {
+        if (typeof xOffset === 'undefined') {
+            xOffset = 0;
+        }
+
+        if (typeof yOffset === 'undefined') {
+            yOffset = 0;
+        }
+
+        return [
+            this.lx <= (p.x + xOffset),
+            this.rx >= (p.x + xOffset),
+            this.ty <= (p.y + yOffset),
+            this.by >= (p.y + yOffset)
+        ].every(Boolean);
     }
 
     rectCollides(r2) {
@@ -139,7 +152,7 @@ class Customer {
 
         let xAmplitude = Random.integer(5, 9);
         let xShift;
-        if (this.rect.x > (vW / 2)) {
+        if (this.rect.centre().x > (vW / 2)) {
             xShift = xAmplitude * customerSpeed;
         } else {
             xShift = -xAmplitude * customerSpeed;
@@ -450,7 +463,7 @@ function handleCanvasMouseMove(e) {
 
     if (!carrying) {
         if (pointingAtItem(p)) {
-            setCursor("assets/pluck.png", 32, 22);
+            setCursor("assets/pluck.png", 28, 20);
         } else {
             resetCursor();
         }
@@ -460,7 +473,7 @@ function handleCanvasMouseMove(e) {
         if (c) {
             c.highlight();
         } else if (pointingAtTrash(p)) {
-            setCursor("assets/trashbag.png", 32, 22);
+            setCursor("assets/trashbag.png", 32, 30);
         } else {
             setCursor(carrying.getImageURL(), 0, 0);
         }
@@ -471,14 +484,14 @@ function handleCanvasMousedown(e) {
     let p = getMousePosOnCanvas(e.target, e);
     if (!carrying) {
         if (pointingAtItem(p)) {
-            setCursor("assets/pluck.png", 32, 22);
+            setCursor("assets/pluck.png", 28, 20);
         } else {
             resetCursor();
         }
 
     } else {
         if (pointingAtTrash(p)) {
-            setCursor("assets/trashbag.png", 32, 22);
+            setCursor("assets/trashbag.png", 32, 30);
         } else {
             setCursor(carrying.getImageURL(), 0, 0);
         }
