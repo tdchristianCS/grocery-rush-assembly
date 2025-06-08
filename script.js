@@ -493,7 +493,31 @@ const getXYFromMoveDirection = (md, x, y) => {
     }
 }
 
-const calculateStore = () => {
+const formatScore = () => {
+    let avg = 0;
+
+    if (reviews.length > 0) {
+        for (let r of reviews) {
+            avg += r;
+        }
+        avg /= reviews.length;
+        avg = Math.round(avg * 10) / 10;
+    }
+
+    avg = avg.toString();
+    if (avg.length === 1) {
+        avg += ".0";
+    }
+
+    return `${avg} ⭐ (${reviews.length})`;
+}
+
+const drawScore = () => {
+    let text = formatScore();
+
+    ctxCustomers.font = "24px Segoe UI";
+    ctxCustomers.fillStyle = "000";
+    ctxCustomers.fillText(text, 1120, 880);
 }
 
 const updateGame = () => {
@@ -510,6 +534,8 @@ const drawGame = () => {
     for (let c of customers) {
         c.draw();
     }
+
+    drawScore();
 }
 
 function getMousePosOnCanvas(canvas, e) {
