@@ -13,9 +13,13 @@
     flex-direction: column;
     justify-content: center;
 }
+.flex-row.flex-row-start {
+    justify-content: start;
+}
 .flex-col.flex-col-start {
     justify-content: start;
 }
+
 a {
     flex-shrink: 1;
     display: block;
@@ -26,10 +30,11 @@ a {
 }
 body {
     margin: 0;
-    background-color: white;
+    background-color: black;
     --screen-w: 1440px; /* calc(100vw - 0px); */
     --screen-h: 900px; /* calc(100vh + 0px); */
     /* Note... on Chrome, an extra 60 px are needed... added to the bottom!?!?!?!?!??!?! */
+    font-family: "quokka", monospace;
 }
 .screen, .layer, .gameCanvas {
     width: var(--screen-w);
@@ -61,23 +66,46 @@ h1, h4, h3, p {
     left: 0;
 }
 
-#welcomeMenu {
+.menu {
     left: 50px;
-    top: calc(0.5 * var(--screen-h));
+    top: calc(0.42 * var(--screen-h));
+    width: calc(0.38 * var(--screen-w));
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-#play-button {
+.spacer {
+    height: 20px;
+}
+
+h4 {
+    font-size: 2rem;
+    text-transform: uppercase;
+}
+
+p {
+    font-size: 1.1rem;
+}
+
+#volume-display {
+    font-size: 1.25rem;
+    margin-left: 10px;
+}
+
+.button {
     background: none;
     border: none;
     outline: none;
     border-radius: 19px;
     font-size: 3rem;
     display: block;
-    min-height: 70px;
     width: 100px;
     color: black;
     font-family: "quokka", sans-serif;
     position: relative;
+    text-transform: uppercase;
 }
 
 button:hover, button:active {
@@ -116,6 +144,55 @@ button:hover::before {
     z-index: 4;
 }
 
-.pointer {
+/* timer */
+
+.optionRow {
+    display: flex;
+    flex-direction: row;
+    gap: 25px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.option label {
+    gap: 10px;
+    border: 2px solid #000;
+    padding: 5px 10px;
+    height: 90px;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+}
+
+.option label:has(input:checked), .optionValidated {
+    background: rgba(255, 255, 255, 0.75);
+    color: #222;
+}
+
+.option label:has(input:not(:disabled)), input[type="checkbox"]:not(:disabled) {
     cursor: pointer;
+}
+
+.option label:has(input:disabled) {
+    background-color:rgba(225, 225, 225, .75);
+    border-color: #777 !important;
+    color: #555;
+}
+
+#volumeLabel {
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-right: 10px;
+}
+
+.inputInLabel {
+    position: relative;
+    top: -5px;
+}
+
+#timeAllowed {
+    font-family: "quokka", monospace;
+    font-size: 1.25rem;
+    background: none;
+    border: 1px solid #000;
+    padding-left: 5px;
 }

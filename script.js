@@ -456,7 +456,6 @@ backgroundMusic.loop = true;
 backgroundMusic.volume = 0.5;
 
 let musicLastVolume = backgroundMusic.volume;
-let musicIsMuted = false;
 
 const hide = (el) => {
     el.addClass('hide');
@@ -465,9 +464,32 @@ const show = (el) => {
     el.removeClass('hide');
 };
 
-const openGameScreen = () => {
+const hideMenus = () => {
+    hide($('#welcomeMenu'));
+    hide($('#instructions'));
+    hide($('#settings'));
+    hide($('#soundControl'));
+}
+
+const showInstructions = () => {
+    hideMenus();
+    show($('#instructions'));
+}
+
+const showWelcome = () => {
+    hideMenus();
+    show($('#welcomeMenu'));
+}
+
+const showSettings = () => {
+    hideMenus();
+    show($('#settings'));
+}
+
+const playGame = () => {
     hide($('#startScreen'));
     show($('#gameScreen'));
+    startMusic();
 
     ctxBG.drawImage(imgBG, 0, 0, vW, vH);
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
@@ -796,26 +818,32 @@ function handleCanvasMouseup(e) {
     }
 }
 
-const useMusic = () => {
+const startMusic = () => {
     backgroundMusic.play();
 };
 
 const handleVolumeUpdate = (e) => {
     let value = parseInt(e.target.value);
     $('#volume-display').text(value);
+
     backgroundMusic.volume = value / 100;
     musicLastVolume = value / 100;
 }
 
-const toggleMuteMusic = () => {
-    if (musicIsMuted) {
-        musicIsMuted = false;
-        backgroundMusic.volume = musicLastVolume;
-        $('#muteSound').text('Mute');
-    } else {
-        musicIsMuted = true;
+const toggleMuteMusic = (e) => {
+    if ($(e.target).prop('checked')) {
+
         backgroundMusic.volume = 0;
-        $('#muteSound').text('Unmute');
+        $('#volume').val(0);
+        $('#volume-display').text(0);
+        $('#volume').prop('disabled', true);
+
+    } else {
+
+        backgroundMusic.volume = musicLastVolume;
+        $('#volume').val(backgroundMusic.volume * 100);
+        $('#volume-display').text(musicLastVolume * 100);
+        $('#volume').prop('disabled', false);
     }
 }
 
@@ -829,24 +857,52 @@ const handleKeyup = (e) => {
     }
 }
 
-//Runs the code
+function handleTimedModeChange(e) {
+    let box = $(e.target);
+    if (box.prop('checked')) {
+        $('#timeAllowedLabel').addClass('optionValidated');
+        $('#timeAllowed').prop('disabled', false);
+        $('#timer').removeClass('disguise');
+    } else {
+        $('#timeAllowedLabel').removeClass('optionValidated');
+        $('#timeAllowed').prop('disabled', true);
+        $('#timer').addClass('disguise');
+    }
+}
+
+function handleTimeAllowedChange(e) {
+    remainingSeconds = parseInt(e.target.value);
+    $('#timer').text(remainingSeconds);
+}
 
 const bind = () => {
-    $("#play-button").click(useMusic)
-    $('#muteSound').click(toggleMuteMusic);
-    $("#play-button").click(openGameScreen);
+    $("#play-button").click(playGame);
+    $("#instructions-button").click(showInstructions);
+    $("#settings-button").click(showSettings);
+    $(".back-button").click(showWelcome);
 
+    $('#mute').change(toggleMuteMusic);
     $('#volume').change(handleVolumeUpdate);
+    $('#volume').mousemove(handleVolumeUpdate);
 
     $('#gameCanvas4').mousemove(handleCanvasMouseMove);
-    // $('#gameCanvas4').mousedown(handleCanvasMousedown);
     $('#gameCanvas4').mouseup(handleCanvasMouseup);
+
+    $('#timedMode').change(handleTimedModeChange);
+    $('#timeAllowed').change(handleTimeAllowedChange);
+    $('#timeAllowed').keydown(handleTimeAllowedChange);
+    $('#timeAllowed').keyup(handleTimeAllowedChange);
 
     $(document).keyup(handleKeyup);
 }
 
 const init = () => {
     bind();
+
+    $('#mute').prop('checked', false);
+    $('#volume').val(backgroundMusic.volume * 100);
+    $('#volume-display').text(musicLastVolume * 100);
+    $('#volume').prop('disabled', false);
 }
 
 // intervals

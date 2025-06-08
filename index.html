@@ -18,63 +18,76 @@ achieve the highest score possible by servicing customers. -->
                      src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Grocery_Rush_2.png">
             </a>
         </div>
+
         <!-- Welcome Screen -->
         <div class="screen menu" id="welcomeMenu">
-            <button class="button" id="play-button">PLAY</button>
+            <div class="spacer"></div>
+            <button class="button" id="play-button">Play</button>
+            <button class="button" id="settings-button">Settings</button>
+            <button class="button" id="instructions-button">Instructions</button>
         </div>
-
 
         <!-- Instruction Screen-->
         <div class="hide screen menu" id="instructions">
-            <h3>
-                "Grocery Rush!" is a fast paced interactive game where the user's goal is to achive
-                the highest score possible. Each day, customers will arrive at the store with different
-                requests. Depending on the service provided, customers will pay different amount of money.
-                The better the service, the more money a player will collect. This money can be used to buy
-                upgrades which help the store run smoother.
-                .
-            </h3>
-            <h4>Controls:</h4>
+            <!--            <h4>Instructions</h4>-->
             <p>
-                Move your player using arrow keys. To grab an item, tap and drag to
-                desired location.
+                "Grocery Rush!" is a fast-paced game where the goal is to achieve
+                the best Yelp reviews. Customers arrive at the store with various
+                requests. Unfortunately, they are cats and can neither find items nor collect
+                them for themselves, so you have to hand them the items yourself.
+                When a customer receives an item, they leave a review. Customers have limited patience,
+                and their review will be better depending on how quickly their request is fulfilled.
+                If they run out of patience or are handed the wrong item, they leave a 1-star review.
+                Some customers have no particular request. Also, the game gets harder over time.
+            </p>
+            <br>
+            <p>
+                Click on a bin to pick up an item. Then, click on a customer to hand them the item.
+                If you want to get rid of the item you're holding, click on the trash bin.
+                Press space to pause/unpause.
             </p>
             <p class="footer">
-                <button class="button" data-screen="menu" id="returnButton">
-                    Back to Menu
-                </button>
+                <button class="button back-button">Back</button>
             </p>
         </div>
+
         <!-- Settings Screen -->
         <div class="hide screen menu" id="settings">
-            <img id="gameBG" src="https://g.tdchristian.ca/GROCERY-RUSH/assets/Game-Background.png">
-            <button class="button" id="soundButton">Sound</button>
-            <button class="button" id="controls">Controls</button>
-            <button class="button" id="backtoMenu">Close Settings</button>
-        </div>
-        <!--Sound Control Screen-->
-        <div class="hide screen menu" id="soundControl">
-            <div class="demo">
-                <div class="flex-col">
-                    <div class="flex-row">
-                        <div class="range-slider">
-                            <input id='volume' type="range" value="50" min="0" max="100" range="true">
-                        </div>
-                        <div class="flex-col">
-                            <div class="range-value" id="volume-display">50</div>
-                        </div>
+            <div class="spacer"></div>
+            <div class="optionRow">
+                    <div class="option">
+                        <label for="mute" id="muteLabel" class="flexRow"><span
+                                class="optionLabel">Mute</span>
+                            <input type="checkbox" id="mute" class="inputInLabel">
+                        </label>
+                    </div>
+                <div class="option flex-row flex-row-start">
+                    <span id="volumeLabel">Volume</span>
+                    <input id='volume' type="range" value="50" min="0" max="100">
+                    <div class="flex-col">
+                        <div class="range-value inputInLabel" id="volume-display">50</div>
                     </div>
                 </div>
-                <div class="flex-row">
-                    <button class="button" id="muteSound">Mute</button>
+            </div>
+            <div class="optionRow">
+                <div class="option">
+                    <label for="timedMode" id="timedModeLabel" class="flexRow"><span
+                            class="optionLabel">Timed mode</span>
+                        <input type="checkbox" class="inputInLabel" checked="checked" id="timedMode">
+                    </label>
                 </div>
-                <div class="flex-row">
-                    <button class="button" id="returntoMenu">Close Sound Settings</button>
+                <div class="option">
+                    <label for="timeAllowed" id="timeAllowedLabel" class="flexRow optionValidated"><span
+                            class="optionLabel">Time</span>
+                        <input type="number" class="inputInLabel" value="60" step="1" min="1" max="120" pattern="[0-9]*" id="timeAllowed">
+                    </label>
                 </div>
             </div>
+            <button class="button back-button">Back</button>
         </div>
     </div>
-    <div id="gameScreen" class="hide screen menu">
+
+    <div id="gameScreen" class="hide screen">
         <canvas id="gameCanvas1" class="gameCanvas" width="1440px" height="900px"></canvas>
         <canvas id="gameCanvas2" class="gameCanvas" width="1440px" height="900px"></canvas>
         <canvas id="gameCanvas3" class="gameCanvas" width="1440px" height="900px"></canvas>
