@@ -146,6 +146,10 @@ button:hover::before {
     z-index: 4;
 }
 
+#gameCanvas5 {
+    z-index: 5;
+}
+
 /* timer */
 
 .optionRow {

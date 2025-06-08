@@ -291,12 +291,12 @@ class Customer {
         let wD = this.rect.w / 2;
         let hD = this.rect.h / 2;
 
-        ctxCustomers.beginPath();
-        ctxCustomers.fillStyle = "white";
-        ctxCustomers.arc(xD + (wD / 2), yD + (hD / 2), wD / 1.5, 0, 2 * Math.PI);
-        ctxCustomers.fill();
+        ctxCustomerInfo.beginPath();
+        ctxCustomerInfo.fillStyle = "white";
+        ctxCustomerInfo.arc(xD + (wD / 2), yD + (hD / 2), wD / 1.5, 0, 2 * Math.PI);
+        ctxCustomerInfo.fill();
 
-        ctxCustomers.drawImage(this.desire.image, xD, yD, wD, hD);
+        ctxCustomerInfo.drawImage(this.desire.image, xD, yD, wD, hD);
     }
 
     drawPatience = () => {
@@ -416,7 +416,10 @@ const ctxCustomers = canvasCustomers.getContext('2d');
 const canvasStore = $('#gameCanvas3').get(0);
 const ctxStore = canvasStore.getContext('2d');
 
-const canvasUI = $('#gameCanvas4').get(0);
+const canvasCustomerInfo = $('#gameCanvas4').get(0);
+const ctxCustomerInfo = canvasCustomerInfo.getContext('2d');
+
+const canvasUI = $('#gameCanvas5').get(0);
 const ctxUI = canvasUI.getContext('2d');
 
 const imgBG = new Image();
@@ -774,6 +777,7 @@ const updateGame = () => {
 
 const drawGame = () => {
     ctxCustomers.clearRect(0, 0, vW, vH);
+    ctxCustomerInfo.clearRect(0, 0, vW, vH);
     for (let c of customers) {
         c.draw();
     }
@@ -805,11 +809,11 @@ function pointingAtTrash(p) {
 }
 
 function setCursor(url, xOffset, yOffset) {
-    $('#gameCanvas4').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
+    $('#gameCanvas5').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
 }
 
 function resetCursor() {
-    $('#gameCanvas4').css('cursor', 'auto');
+    $('#gameCanvas5').css('cursor', 'auto');
 }
 
 function updateCursor() {
@@ -934,8 +938,8 @@ const bind = () => {
     $('#volume').change(handleVolumeUpdate);
     $('#volume').mousemove(handleVolumeUpdate);
 
-    $('#gameCanvas4').mousemove(handleCanvasMouseMove);
-    $('#gameCanvas4').mouseup(handleCanvasMouseup);
+    $('#gameCanvas5').mousemove(handleCanvasMouseMove);
+    $('#gameCanvas5').mouseup(handleCanvasMouseup);
 
     $('#timedMode').change(handleTimedModeChange);
     $('#timeAllowed').change(handleTimeAllowedChange);
