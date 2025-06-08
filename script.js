@@ -114,10 +114,19 @@ class Rectangle {
 class Item {
     name
     rect
+    image
 
     constructor(name, rect) {
         this.name = name;
         this.rect = rect;
+        this.createImage();
+    }
+
+    createImage() {
+        this.image = new Image();
+        this.image.src = this.getImageURL();
+        this.image.width = 24;
+        this.image.height = 24;
     }
 
     getImageURL() {
@@ -207,14 +216,14 @@ class Customer {
 
     moveTowardsExit = () => {
         let yAmplitude = Random.integer(2, 4);
-        let yShift = Random.choice([yAmplitude * customerSpeed, -yAmplitude * customerSpeed]);
+        let yShift = Random.choice([yAmplitude * minCustomerSpeed, -yAmplitude * minCustomerSpeed]);
 
         let xAmplitude = Random.integer(5, 9);
         let xShift;
         if (this.rect.centre().x > (vW / 2)) {
-            xShift = xAmplitude * customerSpeed;
+            xShift = xAmplitude * minCustomerSpeed;
         } else {
-            xShift = -xAmplitude * customerSpeed;
+            xShift = -xAmplitude * minCustomerSpeed;
         }
 
         this.rect.updateOrigin(this.rect.x + xShift, this.rect.y - yShift);
@@ -255,7 +264,26 @@ class Customer {
         } else if (this.state === 2) {
             img = imgCustomerMad;
         }
+
         ctxCustomers.drawImage(img, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+
+        if (!! this.desire) {
+            this.drawDesire();
+        }
+    }
+
+    drawDesire = () => {
+        let xD = this.rect.x + ((customerSize / 1.9))
+        let yD = this.rect.y - (customerSize / 4);
+        let wD = this.rect.w / 2;
+        let hD = this.rect.h / 2;
+
+        ctxCustomers.beginPath();
+        ctxCustomers.fillStyle = "white";
+        ctxCustomers.arc(xD + (wD / 2), yD + (hD / 2), wD / 1.5, 0, 2 * Math.PI);
+        ctxCustomers.fill();
+
+        ctxCustomers.drawImage(this.desire.image, xD, yD, wD, hD);
     }
 
     highlight = () => {
@@ -328,8 +356,8 @@ const minPatienceDrainRate = 1;
 const maxPatienceDrainRate = 5;
 const patienceDrainRateIncrement = 0.1;
 
-const minCustomerSpeed = 2;
-const maxCustomerSpeed = 4;
+const minCustomerSpeed = 1.5;
+const maxCustomerSpeed = 3;
 const customerSpeedIncrement = 0.01;
 
 const minDesireChance = 33;
@@ -528,8 +556,11 @@ const formatScore = () => {
 const drawScore = () => {
     let text = formatScore();
 
-    ctxCustomers.font = "24px Segoe UI";
-    ctxCustomers.fillStyle = "000";
+    ctxCustomers.fillStyle = "white";
+    ctxCustomers.fillRect(1075, 845, 160, 50);
+
+    ctxCustomers.fillStyle = "black";
+    ctxCustomers.font = "22px Segoe UI";
     ctxCustomers.fillText(text, 1120, 880);
 }
 
@@ -646,7 +677,7 @@ function handleCanvasMouseup(e) {
     if (!carrying) {
         let item = pointingAtItem(p);
         if (item) {
-            setCursor(item.getImageURL(), 0, 0);
+            setCursor(item.getImageURL(), 24, 24);
             carrying = item;
         }
 
