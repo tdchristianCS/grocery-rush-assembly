@@ -759,7 +759,7 @@ function updateCursor() {
         } else if (pointingAtTrash(p)) {
             setCursor("assets/trashbag.png", 32, 30);
         } else {
-            setCursor(carrying.getImageURL(), 0, 0);
+            setCursor(carrying.getImageURL(), 24, 24);
         }
     }
 }
@@ -778,7 +778,7 @@ function handleCanvasMouseup(e) {
     if (!carrying) {
         let item = pointingAtItem(p);
         if (item) {
-            setCursor(item.getImageURL(), 0, 0);
+            setCursor(item.getImageURL(), 24, 24);
             carrying = item;
         }
 
