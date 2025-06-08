@@ -431,6 +431,8 @@ const openGameScreen = () => {
     ctxStore.drawImage(imgTrash, 1350, 800, 60, 80);
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
     refreshInterval = setInterval(updateGame, refreshRate);
+
+    gameState = 1;
 };
 
 const getLiveObstacles = () => {
@@ -472,6 +474,10 @@ const hasAnyCollision = (rectCollider, rectIgnore) => {
 };
 
 const spawnCustomer = () => {
+    if (gameState !== 1) {
+        return;
+    }
+
     if (customers.length >= maxCustomers) {
         return;
     }
@@ -564,6 +570,17 @@ const drawScore = () => {
     ctxCustomers.fillText(text, 1120, 880);
 }
 
+const drawPaused = () => {
+    if (gameState === 2) {
+        ctxCustomers.fillStyle = "black";
+        ctxCustomers.fillRect(560, 350, 270, 60);
+
+        ctxCustomers.fillStyle = "white";
+        ctxCustomers.font = "60px Segoe UI";
+        ctxCustomers.fillText("PAUSED", 590, 400);
+    }
+}
+
 const updateDifficulty = () => {
     // increase desire chance
     if (desireChance < maxDesireChance) {
@@ -582,9 +599,11 @@ const updateDifficulty = () => {
 }
 
 const updateGame = () => {
-    for (let customer of customers) {
-        customer.updatePatience();
-        customer.move();
+    if (gameState === 1) {
+        for (let customer of customers) {
+            customer.updatePatience();
+            customer.move();
+        }
     }
 
     drawGame();
@@ -597,6 +616,7 @@ const drawGame = () => {
     }
 
     drawScore();
+    drawPaused();
 }
 
 function getMousePosOnCanvas(canvas, e) {
@@ -718,6 +738,16 @@ const toggleMuteMusic = () => {
     }
 }
 
+const handleKeyup = (e) => {
+    if (e.code === "Space") {
+        if (gameState === 1) {
+            gameState = 2;
+        } else if (gameState === 2) {
+            gameState = 1;
+        }
+    }
+}
+
 //Runs the code
 
 const bind = () => {
@@ -730,6 +760,8 @@ const bind = () => {
     $('#gameCanvas3').mousemove(handleCanvasMouseMove);
     $('#gameCanvas3').mousedown(handleCanvasMousedown);
     $('#gameCanvas3').mouseup(handleCanvasMouseup);
+
+    $(document).keyup(handleKeyup);
 }
 
 const init = () => {
@@ -746,5 +778,6 @@ var reviews = [];
 var desireChance = minDesireChance;
 var customerSpeed = minCustomerSpeed;
 var patienceDrainRate = minPatienceDrainRate; // per frame
+var gameState = 0; // 0 = not started, 1 = playing, 2 = paused, 3 = ended
 
 $(document).ready(init);
