@@ -140,10 +140,47 @@ class Customer {
         this.patience = maxPatience;
     }
 
-    updatePatience = () => {
-        this.patience -= patienceDrainRate;
-        if (this.patience <= 0) {
+    give = (carrying) => {
+        if (! this.desire || (this.desire.name === carrying.name)) {
+            this.state = 1;
+        } else {
             this.state = 2;
+        }
+        this.leaveReview();
+    }
+
+    getReview = () => {
+        // angry = 1-star review
+        if (this.state === 2) {
+            return 1;
+
+        } else {
+            // if patience is in top 10%, 5-star
+            // if it's in the bottom 10%, 1-star
+            // otherwise linear scale
+
+            if (this.patience >= (0.9 * maxPatience)) {
+                return 5;
+            } else if (this.patience < (0.1 * maxPatience)) {
+                return 1;
+            } else {
+                return 1 + Math.round(((this.patience / maxPatience) * 4) * 10) / 10;
+            }
+        }
+    }
+
+    leaveReview = () => {
+        reviews.push(this.getReview());
+        console.log(`Review left: ${this.getReview()}`);
+    }
+
+    updatePatience = () => {
+        if (this.state === 0) {
+            this.patience -= patienceDrainRate;
+            if (this.patience <= 0) {
+                this.state = 2;
+                this.leaveReview();
+            }
         }
     }
 
@@ -261,6 +298,9 @@ const customerSpeed = 2;
 const maxCustomers = 100;
 const maxPatience = 1_800;
 const patienceDrainRate = 1; // per frame
+const minDesireChance = 33;
+const maxDesireChance = 70;
+const desireChanceIncrement = 1;
 
 const customerSpawnRate = 1_000;
 const refreshRate = 1_000 / 60;
@@ -422,7 +462,8 @@ const getXYFromMoveDirection = (md, x, y) => {
     }
 }
 
-const calculateStore = () => {}
+const calculateStore = () => {
+}
 
 const updateGame = () => {
     for (let customer of customers) {
@@ -525,7 +566,7 @@ function handleCanvasMouseup(e) {
     } else {
         let c = pointingAtCustomer(p);
         if (c) {
-            c.state = 1;
+            c.give(carrying);
             carrying = null;
             resetCursor();
 
@@ -577,9 +618,13 @@ const init = () => {
     bind();
 }
 
+// intervals
 var spawnInterval;
 var refreshInterval;
+
+// mutable game variables
 var carrying = null;
 var reviews = [];
+var desireChance = minDesireChance;
 
 $(document).ready(init);
