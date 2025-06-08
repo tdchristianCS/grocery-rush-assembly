@@ -4,6 +4,7 @@ const vH = 900; // Window.innerHeight;
 class Point {
     x
     y
+
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -72,7 +73,7 @@ class Rectangle {
         this.tr = new Point(this.rx, this.ty);
         this.bl = new Point(this.lx, this.by);
         this.br = new Point(this.rx, this.by);
-}
+    }
 
     corners() {
         return [this.tl, this.tr, this.bl, this.br];
@@ -174,6 +175,8 @@ const items = [
 
 var customers = [];
 
+const trashRect = Rectangle.fromCorners(1350, 800, 1400, 880);
+
 const obstaclesFixed = [
     Rectangle.fromCorners(70, 70, 265, 260),
     Rectangle.fromCorners(290, 115, 365, 265),
@@ -182,6 +185,7 @@ const obstaclesFixed = [
     Rectangle.fromCorners(405, 425, 960, 650),
     Rectangle.fromCorners(360, 735, 980, 840),
     Rectangle.fromCorners(1115, 555, 1230, 840),
+    trashRect
 ];
 
 const directions = [
@@ -220,6 +224,11 @@ imgStore.src = 'assets/StoreItems.png';
 imgStore.width = vW;
 imgStore.height = vH;
 
+const imgTrash = new Image();
+imgTrash.src = 'assets/trash.png';
+imgTrash.width = 50;
+imgTrash.height = 80;
+
 const imgCustomer = new Image();
 imgCustomer.src = 'assets/customer.png';
 imgCustomer.width = 200;
@@ -247,6 +256,7 @@ const openGameScreen = () => {
 
     ctxBG.drawImage(imgBG, 0, 0, vW, vH);
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
+    ctxStore.drawImage(imgTrash, 1350, 800, 60, 80);
     spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
     refreshInterval = setInterval(updateGame, refreshRate);
 };
@@ -388,6 +398,10 @@ function pointingAtCustomer(p) {
     }
 }
 
+function pointingAtTrash(p) {
+    return trashRect.pointCollides((p));
+}
+
 function setCursor(url, xOffset, yOffset) {
     $('#gameCanvas3').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
 }
@@ -399,35 +413,47 @@ function resetCursor() {
 function handleCanvasMouseMove(e) {
     let p = getMousePosOnCanvas(e.target, e);
 
-    if (! carrying) {
+    if (!carrying) {
         if (pointingAtItem(p)) {
             setCursor("assets/pluck.png", 32, 22);
         } else {
             resetCursor();
+        }
+
+    } else {
+        if (pointingAtTrash(p)) {
+            setCursor("assets/trashbag.png", 32, 22);
+        } else {
+            setCursor(carrying.getImageURL(), 0, 0);
         }
     }
 }
 
 function handleCanvasMousedown(e) {
     let p = getMousePosOnCanvas(e.target, e);
-    if (! carrying) {
+    if (!carrying) {
         if (pointingAtItem(p)) {
-            setCursor("assets/pinch.png", 32, 22);
+            setCursor("assets/pluck.png", 32, 22);
         } else {
             resetCursor();
+        }
+
+    } else {
+        if (pointingAtTrash(p)) {
+            setCursor("assets/trashbag.png", 32, 22);
+        } else {
+            setCursor(carrying.getImageURL(), 0, 0);
         }
     }
 }
 
 function handleCanvasMouseup(e) {
     let p = getMousePosOnCanvas(e.target, e);
-    if (! carrying) {
+    if (!carrying) {
         let item = pointingAtItem(p);
         if (item) {
             setCursor(item.getImageURL(), 0, 0);
             carrying = item;
-        } else {
-            resetCursor();
         }
 
     } else {
@@ -436,6 +462,11 @@ function handleCanvasMouseup(e) {
             c.state = 1;
             JSTools.removeFromArray(customers, c);
             carrying = null;
+            resetCursor();
+
+        } else if (pointingAtTrash(p)) {
+            carrying = null;
+            resetCursor();
         }
     }
 }
