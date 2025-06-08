@@ -288,7 +288,7 @@ class Customer {
 
     highlight = () => {
         ctxCustomers.beginPath();
-        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, (customerSize / 2) + 5, 0, 2 * Math.PI);
+        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, (customerSize / 2), 0, 2 * Math.PI);
         ctxCustomers.lineWidth = 4;
 
         if (this.foodIsSuitable()) {
@@ -346,27 +346,6 @@ const directions = [
 
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
-const margin = 10;
-const customerSize = 64;
-const maxCustomers = 100;
-
-const maxPatience = 1_800;
-
-const minPatienceDrainRate = 1;
-const maxPatienceDrainRate = 5;
-const patienceDrainRateIncrement = 0.1;
-
-const minCustomerSpeed = 1.5;
-const maxCustomerSpeed = 3;
-const customerSpeedIncrement = 0.01;
-
-const minDesireChance = 33;
-const maxDesireChance = 90;
-const desireChanceIncrement = 0.5;
-
-const customerSpawnRate = 1_000;
-const refreshRate = 1_000 / 60;
-
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
 
@@ -375,6 +354,9 @@ const ctxCustomers = canvasCustomers.getContext('2d');
 
 const canvasStore = $('#gameCanvas3').get(0);
 const ctxStore = canvasStore.getContext('2d');
+
+const canvasUI = $('#gameCanvas4').get(0);
+const ctxUI = canvasUI.getContext('2d');
 
 const imgBG = new Image();
 imgBG.src = 'assets/Store-Floor.png';
@@ -559,25 +541,31 @@ const formatScore = () => {
     return `${avg} ⭐ (${reviews.length})`;
 }
 
+const drawUI = () => {
+    ctxUI.clearRect(0, 0, vW, vH);
+    drawScore();
+    drawPaused();
+}
+
 const drawScore = () => {
     let text = formatScore();
 
-    ctxCustomers.fillStyle = "white";
-    ctxCustomers.fillRect(1075, 845, 160, 50);
+    ctxUI.fillStyle = "white";
+    ctxUI.fillRect(1075, 845, 160, 50);
 
-    ctxCustomers.fillStyle = "black";
-    ctxCustomers.font = "22px Segoe UI";
-    ctxCustomers.fillText(text, 1120, 880);
+    ctxUI.fillStyle = "black";
+    ctxUI.font = "22px Segoe UI";
+    ctxUI.fillText(text, 1120, 880);
 }
 
 const drawPaused = () => {
     if (gameState === 2) {
-        ctxCustomers.fillStyle = "black";
-        ctxCustomers.fillRect(560, 350, 270, 60);
+        ctxUI.fillStyle = "black";
+        ctxUI.fillRect(560, 350, 270, 60);
 
-        ctxCustomers.fillStyle = "white";
-        ctxCustomers.font = "60px Segoe UI";
-        ctxCustomers.fillText("PAUSED", 590, 400);
+        ctxUI.fillStyle = "white";
+        ctxUI.font = "60px Segoe UI";
+        ctxUI.fillText("PAUSED", 590, 400);
     }
 }
 
@@ -607,6 +595,8 @@ const updateGame = () => {
     }
 
     drawGame();
+    drawUI();
+    updateCursor();
 }
 
 const drawGame = () => {
@@ -614,9 +604,6 @@ const drawGame = () => {
     for (let c of customers) {
         c.draw();
     }
-
-    drawScore();
-    drawPaused();
 }
 
 function getMousePosOnCanvas(canvas, e) {
@@ -645,15 +632,19 @@ function pointingAtTrash(p) {
 }
 
 function setCursor(url, xOffset, yOffset) {
-    $('#gameCanvas3').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
+    $('#gameCanvas4').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
 }
 
 function resetCursor() {
-    $('#gameCanvas3').css('cursor', 'auto');
+    $('#gameCanvas4').css('cursor', 'auto');
 }
 
-function handleCanvasMouseMove(e) {
-    let p = getMousePosOnCanvas(e.target, e);
+function updateCursor() {
+    let p = lastSeenMousePos;
+    if (! p) { return; }
+    if (gameState === 2) {
+        return;
+    }
 
     if (!carrying) {
         if (pointingAtItem(p)) {
@@ -665,6 +656,7 @@ function handleCanvasMouseMove(e) {
     } else {
         let c = pointingAtCustomer(p);
         if (c) {
+            console.log('should be highlighting');
             c.highlight();
         } else if (pointingAtTrash(p)) {
             setCursor("assets/trashbag.png", 32, 30);
@@ -674,25 +666,16 @@ function handleCanvasMouseMove(e) {
     }
 }
 
-function handleCanvasMousedown(e) {
-    let p = getMousePosOnCanvas(e.target, e);
-    if (!carrying) {
-        if (pointingAtItem(p)) {
-            setCursor("assets/pluck.png", 28, 20);
-        } else {
-            resetCursor();
-        }
-
-    } else {
-        if (pointingAtTrash(p)) {
-            setCursor("assets/trashbag.png", 32, 30);
-        } else {
-            setCursor(carrying.getImageURL(), 0, 0);
-        }
-    }
+function handleCanvasMouseMove(e) {
+    lastSeenMousePos = getMousePosOnCanvas(e.target, e);
+    updateCursor();
 }
 
 function handleCanvasMouseup(e) {
+    if (gameState === 2) {
+        return;
+    }
+
     let p = getMousePosOnCanvas(e.target, e);
     if (!carrying) {
         let item = pointingAtItem(p);
@@ -757,9 +740,9 @@ const bind = () => {
 
     $('#volume').change(handleVolumeUpdate);
 
-    $('#gameCanvas3').mousemove(handleCanvasMouseMove);
-    $('#gameCanvas3').mousedown(handleCanvasMousedown);
-    $('#gameCanvas3').mouseup(handleCanvasMouseup);
+    $('#gameCanvas4').mousemove(handleCanvasMouseMove);
+    // $('#gameCanvas4').mousedown(handleCanvasMousedown);
+    $('#gameCanvas4').mouseup(handleCanvasMouseup);
 
     $(document).keyup(handleKeyup);
 }
@@ -779,5 +762,6 @@ var desireChance = minDesireChance;
 var customerSpeed = minCustomerSpeed;
 var patienceDrainRate = minPatienceDrainRate; // per frame
 var gameState = 0; // 0 = not started, 1 = playing, 2 = paused, 3 = ended
+var lastSeenMousePos = null;
 
 $(document).ready(init);
