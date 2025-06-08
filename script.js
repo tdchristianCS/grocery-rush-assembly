@@ -140,6 +140,7 @@ class Customer {
     state // 0 = shopping, 1 = satisfied, 2 = angry
     movedir
     patience
+    slatedToDestroy;
 
     constructor(rect) {
         this.rect = rect;
@@ -153,6 +154,8 @@ class Customer {
         } else {
             this.desire = Random.choice(items);
         }
+
+        this.slatedToDestroy = false;
     }
 
     foodIsSuitable = () => {
@@ -191,8 +194,9 @@ class Customer {
     }
 
     leaveReview = () => {
-        reviews.push(this.getReview());
-        console.log(`Review left: ${this.getReview()}`);
+        let review = this.getReview();
+        reviews.push(review);
+        reviewMarkers.push(new ReviewMarker(this.rect.x, this.rect.y, review));
     }
 
     updatePatience = () => {
@@ -227,8 +231,8 @@ class Customer {
         }
 
         this.rect.updateOrigin(this.rect.x + xShift, this.rect.y - yShift);
-        if (this.rect.x > vW) {
-            JSTools.removeFromArray(customers, this);
+        if ((this.rect.x > vW) || (this.rect.x < 0)) {
+            this.slatedToDestroy = true;
         }
     }
 
@@ -300,6 +304,38 @@ class Customer {
         ctxCustomers.stroke();
     }
 }
+
+class ReviewMarker {
+    x
+    y
+    value
+    timeout
+    slatedToDestroy
+
+    constructor(x, y, value) {
+        this.x = x;
+        this.y = y;
+        this.value = formatNumber(value);
+
+        this.slatedToDestroy = false;
+        this.timeout = setTimeout(() => {
+            this.slatedToDestroy = true;
+            }, 1_000);
+    }
+
+    draw() {
+        let text = `${this.value} ⭐`;
+
+        ctxUI.fillStyle = "white";
+        ctxUI.fillRect(this.x - 5, this.y - 20, 70, 28);
+
+        ctxUI.fillStyle = "black";
+        ctxUI.font = "22px Segoe UI";
+        ctxUI.fillText(text, this.x, this.y);
+    }
+}
+
+var reviewMarkers = [];
 
 const items = [
     new Item('broccoli', Rectangle.fromCorners(820, 525, 955, 595)),
@@ -522,6 +558,14 @@ const getXYFromMoveDirection = (md, x, y) => {
     }
 }
 
+const formatNumber = (n) => {
+    n = n.toString();
+    if (n.length === 1) {
+        n += ".0";
+    }
+    return n;
+}
+
 const formatScore = () => {
     let avg = 0;
 
@@ -533,25 +577,29 @@ const formatScore = () => {
         avg = Math.round(avg * 10) / 10;
     }
 
-    avg = avg.toString();
-    if (avg.length === 1) {
-        avg += ".0";
-    }
+    avg = formatNumber(avg);
 
     return `${avg} ⭐ (${reviews.length})`;
 }
 
 const drawUI = () => {
     ctxUI.clearRect(0, 0, vW, vH);
+    drawReviewMarkers();
     drawScore();
     drawPaused();
+}
+
+const drawReviewMarkers = () => {
+    for (let rm of reviewMarkers) {
+        rm.draw();
+    }
 }
 
 const drawScore = () => {
     let text = formatScore();
 
     ctxUI.fillStyle = "white";
-    ctxUI.fillRect(1075, 845, 160, 50);
+    ctxUI.fillRect(1115, 845, 130, 50);
 
     ctxUI.fillStyle = "black";
     ctxUI.font = "22px Segoe UI";
@@ -586,8 +634,24 @@ const updateDifficulty = () => {
     }
 }
 
+const cleanupCustomers = () => {
+    JSTools.filterArrayInPlace(customers, function(e) {
+        return ! e.slatedToDestroy;
+    });
+}
+
+const cleanupReviewMarkers = () => {
+    JSTools.filterArrayInPlace(reviewMarkers, function(e) {
+        return ! e.slatedToDestroy;
+    });
+}
+
 const updateGame = () => {
+
     if (gameState === 1) {
+        cleanupCustomers();
+        cleanupReviewMarkers();
+
         for (let customer of customers) {
             customer.updatePatience();
             customer.move();
@@ -656,7 +720,6 @@ function updateCursor() {
     } else {
         let c = pointingAtCustomer(p);
         if (c) {
-            console.log('should be highlighting');
             c.highlight();
         } else if (pointingAtTrash(p)) {
             setCursor("assets/trashbag.png", 32, 30);

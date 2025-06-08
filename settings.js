@@ -19,4 +19,4 @@ const minDesireChance = 33;
 const maxDesireChance = 90;
 const desireChanceIncrement = 0.5;
 
-const customerSpawnRate = 2_000;
+const customerSpawnRate = 1_500;
