@@ -9,7 +9,7 @@ const maxPatience = 30 * fps;
 
 const minPatienceDrainRate = 1;
 const maxPatienceDrainRate = 5;
-const patienceDrainRateIncrement = 0.25;
+const patienceDrainRateIncrement = 0.2;
 
 const minCustomerSpeed = 1.5;
 const maxCustomerSpeed = 3;
@@ -17,8 +17,8 @@ const customerSpeedIncrement = 0.02;
 
 const minDesireChance = 33;
 const maxDesireChance = 90;
-const desireChanceIncrement = 0.5;
+const desireChanceIncrement = 0.75;
 
 const slowestCustomerSpawnRate = 2_000;
 const fastestCustomerSpawnRate = 1_000;
-const customerSpawnRateIncrement = 25;
+const customerSpawnRateIncrement = 1.75;

@@ -627,12 +627,12 @@ const drawReviewMarkers = () => {
 const drawScore = () => {
     let text = formatScore();
 
-    ctxUI.fillStyle = "white";
-    ctxUI.fillRect(1115, 845, 130, 50);
-
     ctxUI.fillStyle = "black";
+    ctxUI.fillRect(1300, 0, 150, 50);
+
+    ctxUI.fillStyle = "white";
     ctxUI.font = "22px Segoe UI";
-    ctxUI.fillText(text, 1120, 880);
+    ctxUI.fillText(text, 1310, 30);
 }
 
 const drawPaused = () => {
