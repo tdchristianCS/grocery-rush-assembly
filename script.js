@@ -156,17 +156,9 @@ class Customer {
         } else {
             this.state = 2;
         }
+
         this.leaveReview();
-
-        // increase chance of future cats to have a specific desire
-        if (desireChance < maxDesireChance) {
-            desireChance += desireChanceIncrement;
-        }
-
-        // increase customer speed
-        if (customerSpeed < maxCustomerSpeed) {
-            customerSpeed += customerSpeedIncrement;
-        }
+        updateDifficulty();
     }
 
     getReview = () => {
@@ -255,12 +247,20 @@ class Customer {
     }
 
     draw = () => {
-        ctxCustomers.drawImage(imgCustomer, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+        let img;
+        if (this.state === 0) {
+            img = imgCustomer;
+        } else if (this.state === 1) {
+            img = imgCustomerGlad;
+        } else if (this.state === 2) {
+            img = imgCustomerMad;
+        }
+        ctxCustomers.drawImage(img, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
     }
 
     highlight = () => {
         ctxCustomers.beginPath();
-        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, customerSize / 2, 0, 2 * Math.PI);
+        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, (customerSize / 2) + 5, 0, 2 * Math.PI);
         ctxCustomers.lineWidth = 4;
 
         if (this.foodIsSuitable()) {
@@ -319,11 +319,14 @@ const directions = [
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
 const margin = 10;
-const customerSize = 72;
+const customerSize = 64;
 const maxCustomers = 100;
 
 const maxPatience = 1_800;
-const patienceDrainRate = 1; // per frame
+
+const minPatienceDrainRate = 1;
+const maxPatienceDrainRate = 5;
+const patienceDrainRateIncrement = 0.1;
 
 const minCustomerSpeed = 2;
 const maxCustomerSpeed = 4;
@@ -362,8 +365,18 @@ imgTrash.height = 80;
 
 const imgCustomer = new Image();
 imgCustomer.src = 'assets/customer.png';
-imgCustomer.width = 200;
-imgCustomer.height = 200;
+imgCustomer.width = 500;
+imgCustomer.height = 450;
+
+const imgCustomerMad = new Image();
+imgCustomerMad.src = 'assets/customer-mad.png';
+imgCustomerMad.width = 500;
+imgCustomerMad.height = 450;
+
+const imgCustomerGlad = new Image();
+imgCustomerGlad.src = 'assets/customer-glad.png';
+imgCustomerGlad.width = 500;
+imgCustomerGlad.height = 450;
 
 const backgroundMusic = new Audio(
     "assets/music.mp3"
@@ -518,6 +531,23 @@ const drawScore = () => {
     ctxCustomers.font = "24px Segoe UI";
     ctxCustomers.fillStyle = "000";
     ctxCustomers.fillText(text, 1120, 880);
+}
+
+const updateDifficulty = () => {
+    // increase desire chance
+    if (desireChance < maxDesireChance) {
+        desireChance += desireChanceIncrement;
+    }
+
+    // increase customer speed
+    if (customerSpeed < maxCustomerSpeed) {
+        customerSpeed += customerSpeedIncrement;
+    }
+
+    // increase patience drain rate
+    if (patienceDrainRate < maxPatienceDrainRate) {
+        patienceDrainRate += patienceDrainRateIncrement;
+    }
 }
 
 const updateGame = () => {
@@ -684,5 +714,6 @@ var carrying = null;
 var reviews = [];
 var desireChance = minDesireChance;
 var customerSpeed = minCustomerSpeed;
+var patienceDrainRate = minPatienceDrainRate; // per frame
 
 $(document).ready(init);
