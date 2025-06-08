@@ -140,6 +140,8 @@ class Customer {
     state // 0 = shopping, 1 = satisfied, 2 = angry
     movedir
     patience
+    patienceDrainRate
+    speed
     slatedToDestroy;
 
     constructor(rect) {
@@ -148,6 +150,9 @@ class Customer {
         this.movedir = null;
 
         this.patience = maxPatience;
+        this.patienceDrainRate = patienceDrainRate; // locks it in place
+
+        this.speed = customerSpeed;
 
         if (! Random.chance(desireChance)) {
             this.desire = null;
@@ -248,7 +253,7 @@ class Customer {
         // Try all the directions
         let x, y, rectCollider;
         for (let md of possibleDirections) {
-            [x, y] = getXYFromMoveDirection(md, this.rect.lx, this.rect.ty);
+            [x, y] = getXYFromMoveDirection(md, this.speed, this.rect.lx, this.rect.ty);
             rectCollider = Rectangle.fromOriginAndDimensions(x, y, customerSize, customerSize);
 
             if (canMoveHere(rectCollider, this.rect)) {
@@ -274,6 +279,10 @@ class Customer {
         if (!! this.desire) {
             this.drawDesire();
         }
+
+        if (this.state === 0) {
+            this.drawPatience();
+        }
     }
 
     drawDesire = () => {
@@ -288,6 +297,22 @@ class Customer {
         ctxCustomers.fill();
 
         ctxCustomers.drawImage(this.desire.image, xD, yD, wD, hD);
+    }
+
+    drawPatience = () => {
+        let pct = this.patience / maxPatience * 100;
+        let w = JSTools.proportion(pct, this.rect.w);
+        let x = this.rect.x + ((this.rect.w - w) / 2);
+
+        if (pct > 66) {
+            ctxCustomers.fillStyle = "green";
+        } else if (pct > 33) {
+            ctxCustomers.fillStyle = "orange";
+        } else {
+            ctxCustomers.fillStyle = "red";
+        }
+
+        ctxCustomers.fillRect(x, this.rect.by, w, 2);
     }
 
     highlight = () => {
@@ -524,41 +549,41 @@ const spawnCustomer = () => {
     spawnTimeout = setTimeout(spawnCustomer, customerSpawnRate);
 }
 
-const getXYFromMoveDirection = (md, x, y) => {
+const getXYFromMoveDirection = (md, speed, x, y) => {
     if (md === 'E') {
-        return [x + customerSpeed, y];
+        return [x + speed, y];
     } else if (md === 'W') {
-        return [x - customerSpeed, y];
+        return [x - speed, y];
     } else if (md === 'N') {
-        return [x, y - customerSpeed];
+        return [x, y - speed];
     } else if (md === 'S') {
-        return [x, y + customerSpeed];
+        return [x, y + speed];
 
     } else if (md === 'NE') {
-        return [x + customerSpeed, y - customerSpeed];
+        return [x + speed, y - speed];
     } else if (md === 'NW') {
-        return [x - customerSpeed, y - customerSpeed];
+        return [x - speed, y - speed];
     } else if (md === 'SE') {
-        return [x + customerSpeed, y + customerSpeed];
+        return [x + speed, y + speed];
     } else if (md === 'SW') {
-        return [x - customerSpeed, y + customerSpeed];
+        return [x - speed, y + speed];
 
     } else if (md === 'NNE') {
-        return [x + customerSpeed / 2, y - customerSpeed];
+        return [x + speed / 2, y - speed];
     } else if (md === 'NNW') {
-        return [x - customerSpeed / 2, y - customerSpeed];
+        return [x - speed / 2, y - speed];
     } else if (md === 'SSE') {
-        return [x + customerSpeed / 2, y + customerSpeed];
+        return [x + speed / 2, y + speed];
     } else if (md === 'SSW') {
-        return [x - customerSpeed / 2, y + customerSpeed];
+        return [x - speed / 2, y + speed];
     } else if (md === 'ENE') {
-        return [x + customerSpeed, y - customerSpeed / 2];
+        return [x + speed, y - speed / 2];
     } else if (md === 'WNW') {
-        return [x - customerSpeed, y - customerSpeed / 2];
+        return [x - speed, y - speed / 2];
     } else if (md === 'ESE') {
-        return [x + customerSpeed, y + customerSpeed / 2];
+        return [x + speed, y + speed / 2];
     } else if (md === 'WSW') {
-        return [x - customerSpeed, y + customerSpeed / 2];
+        return [x - speed, y + speed / 2];
     }
 }
 
