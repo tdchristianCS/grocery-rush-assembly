@@ -132,21 +132,41 @@ class Customer {
     movedir
     patience
 
-    constructor(rect, desire) {
+    constructor(rect) {
         this.rect = rect;
-        this.desire = desire;
         this.state = 0;
         this.movedir = null;
+
         this.patience = maxPatience;
+
+        if (! Random.chance(desireChance)) {
+            this.desire = null;
+        } else {
+            this.desire = Random.choice(items);
+        }
     }
 
-    give = (carrying) => {
-        if (! this.desire || (this.desire.name === carrying.name)) {
+    foodIsSuitable = () => {
+        return ! this.desire || ! carrying || (this.desire.name === carrying.name);
+    }
+
+    give = () => {
+        if (this.foodIsSuitable()) {
             this.state = 1;
         } else {
             this.state = 2;
         }
         this.leaveReview();
+
+        // increase chance of future cats to have a specific desire
+        if (desireChance < maxDesireChance) {
+            desireChance += desireChanceIncrement;
+        }
+
+        // increase customer speed
+        if (customerSpeed < maxCustomerSpeed) {
+            customerSpeed += customerSpeedIncrement;
+        }
     }
 
     getReview = () => {
@@ -242,7 +262,13 @@ class Customer {
         ctxCustomers.beginPath();
         ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, customerSize / 2, 0, 2 * Math.PI);
         ctxCustomers.lineWidth = 4;
-        ctxCustomers.strokeStyle = "white";
+
+        if (this.foodIsSuitable()) {
+            ctxCustomers.strokeStyle = "white";
+        } else {
+            ctxCustomers.strokeStyle = "red";
+        }
+
         ctxCustomers.stroke();
     }
 }
@@ -294,13 +320,18 @@ const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
 const margin = 10;
 const customerSize = 72;
-const customerSpeed = 2;
 const maxCustomers = 100;
+
 const maxPatience = 1_800;
 const patienceDrainRate = 1; // per frame
+
+const minCustomerSpeed = 2;
+const maxCustomerSpeed = 4;
+const customerSpeedIncrement = 0.01;
+
 const minDesireChance = 33;
 const maxDesireChance = 70;
-const desireChanceIncrement = 1;
+const desireChanceIncrement = 0.5;
 
 const customerSpawnRate = 1_000;
 const refreshRate = 1_000 / 60;
@@ -626,5 +657,6 @@ var refreshInterval;
 var carrying = null;
 var reviews = [];
 var desireChance = minDesireChance;
+var customerSpeed = minCustomerSpeed;
 
 $(document).ready(init);
