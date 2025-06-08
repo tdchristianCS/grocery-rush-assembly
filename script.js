@@ -126,6 +126,32 @@ class Customer {
     }
 
     move = () => {
+        if (this.state === 0) {
+            this.moveRandomly();
+        } else {
+            this.moveTowardsExit();
+        }
+    }
+
+    moveTowardsExit = () => {
+        let yAmplitude = Random.integer(2, 4);
+        let yShift = Random.choice([yAmplitude * customerSpeed, -yAmplitude * customerSpeed]);
+
+        let xAmplitude = Random.integer(5, 9);
+        let xShift;
+        if (this.rect.x > (vW / 2)) {
+            xShift = xAmplitude * customerSpeed;
+        } else {
+            xShift = -xAmplitude * customerSpeed;
+        }
+
+        this.rect.updateOrigin(this.rect.x + xShift, this.rect.y - yShift);
+        if (this.rect.x > vW) {
+            JSTools.removeFromArray(customers, this);
+        }
+    }
+
+    moveRandomly = () => {
         // Randomize possible directions
         let possibleDirections = [...directions];
         Random.shuffle(possibleDirections);
@@ -146,9 +172,18 @@ class Customer {
                 return;
             }
         }
+    }
 
-        // No?
-        console.log('Customer was unable to move');
+    draw = () => {
+        ctxCustomers.drawImage(imgCustomer, this.rect.x, this.rect.y, this.rect.w, this.rect.h);
+    }
+
+    highlight = () => {
+        ctxCustomers.beginPath();
+        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, customerSize / 2, 0, 2 * Math.PI);
+        ctxCustomers.lineWidth = 4;
+        ctxCustomers.strokeStyle = "white";
+        ctxCustomers.stroke();
     }
 }
 
@@ -373,7 +408,7 @@ const updateGame = () => {
 const drawGame = () => {
     ctxCustomers.clearRect(0, 0, vW, vH);
     for (let c of customers) {
-        ctxCustomers.drawImage(imgCustomer, c.rect.x, c.rect.y, c.rect.w, c.rect.h);
+        c.draw();
     }
 }
 
@@ -421,7 +456,10 @@ function handleCanvasMouseMove(e) {
         }
 
     } else {
-        if (pointingAtTrash(p)) {
+        let c = pointingAtCustomer(p);
+        if (c) {
+            c.highlight();
+        } else if (pointingAtTrash(p)) {
             setCursor("assets/trashbag.png", 32, 22);
         } else {
             setCursor(carrying.getImageURL(), 0, 0);
@@ -460,7 +498,6 @@ function handleCanvasMouseup(e) {
         let c = pointingAtCustomer(p);
         if (c) {
             c.state = 1;
-            JSTools.removeFromArray(customers, c);
             carrying = null;
             resetCursor();
 
