@@ -122,6 +122,8 @@ button::before {
 }
 button:hover::before {
     content: "▸";
+    height: 50px;
+    font-size: 2.5rem;
 }
 .highlight {
     background-color: green;

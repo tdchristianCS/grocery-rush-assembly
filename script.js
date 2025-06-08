@@ -499,7 +499,31 @@ const playGame = () => {
     refreshInterval = setInterval(updateGame, refreshRate);
 
     gameState = 1;
+
+    if ($('#timedMode').prop('checked')) {
+        remainingSeconds = $('#timeAllowed').val();
+        tickInterval = setInterval(tick, 1_000);
+    }
 };
+
+function stop() {
+    gameState = 3;
+    stopTicking();
+}
+
+function stopTicking() {
+    clearInterval(tickInterval);
+    // remainingSeconds = $('#timeAllowed').val();
+}
+
+function tick() {
+    if (gameState === 1) {
+        remainingSeconds -= 1;
+        if (remainingSeconds === 0) {
+            stop();
+        }
+    }
+}
 
 const getLiveObstacles = () => {
     let obstacles = [...obstaclesFixed];
@@ -633,11 +657,28 @@ const formatScore = () => {
     return `${avg} ⭐ (${reviews.length})`;
 }
 
+const drawTimer = () => {
+    if (! $('#timedMode').prop('checked')) {
+        return;
+    }
+
+    let text = `${remainingSeconds} SECONDS`;
+
+    ctxUI.fillStyle = "black";
+    ctxUI.fillRect(1300, 50, 150, 50);
+
+    ctxUI.fillStyle = "white";
+    ctxUI.font = "22px quokka";
+    ctxUI.fillText(text, 1310, 80);
+}
+
 const drawUI = () => {
     ctxUI.clearRect(0, 0, vW, vH);
     drawReviewMarkers();
     drawScore();
     drawPaused();
+    drawEnded();
+    drawTimer();
 }
 
 const drawReviewMarkers = () => {
@@ -653,18 +694,29 @@ const drawScore = () => {
     ctxUI.fillRect(1300, 0, 150, 50);
 
     ctxUI.fillStyle = "white";
-    ctxUI.font = "22px Segoe UI";
+    ctxUI.font = "22px quokka";
     ctxUI.fillText(text, 1310, 30);
 }
 
 const drawPaused = () => {
     if (gameState === 2) {
         ctxUI.fillStyle = "black";
-        ctxUI.fillRect(560, 350, 270, 60);
+        ctxUI.fillRect(560, 350, 250, 60);
 
         ctxUI.fillStyle = "white";
-        ctxUI.font = "60px Segoe UI";
-        ctxUI.fillText("PAUSED", 590, 400);
+        ctxUI.font = "60px quokka";
+        ctxUI.fillText("PAUSED", 590, 396);
+    }
+}
+
+const drawEnded = () => {
+    if (gameState === 3) {
+        ctxUI.fillStyle = "black";
+        ctxUI.fillRect(560, 350, 280, 60);
+
+        ctxUI.fillStyle = "white";
+        ctxUI.font = "60px quokka";
+        ctxUI.fillText("FINISHED", 590, 396);
     }
 }
 
@@ -862,17 +914,14 @@ function handleTimedModeChange(e) {
     if (box.prop('checked')) {
         $('#timeAllowedLabel').addClass('optionValidated');
         $('#timeAllowed').prop('disabled', false);
-        $('#timer').removeClass('disguise');
     } else {
         $('#timeAllowedLabel').removeClass('optionValidated');
         $('#timeAllowed').prop('disabled', true);
-        $('#timer').addClass('disguise');
     }
 }
 
 function handleTimeAllowedChange(e) {
     remainingSeconds = parseInt(e.target.value);
-    $('#timer').text(remainingSeconds);
 }
 
 const bind = () => {
@@ -908,6 +957,7 @@ const init = () => {
 // intervals
 var refreshInterval = null;
 var spawnTimeout = null;
+var tickInterval = null;
 
 // mutable game variables
 var carrying = null;
@@ -920,5 +970,6 @@ var customerSpawnRate = slowestCustomerSpawnRate;
 
 var gameState = 0; // 0 = not started, 1 = playing, 2 = paused, 3 = ended
 var lastSeenMousePos = null;
+var remainingSeconds = 60;
 
 $(document).ready(init);
