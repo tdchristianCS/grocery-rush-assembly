@@ -1,14 +1,185 @@
 const vW = 1440; // Window.innerWidth;
 const vH = 900; // Window.innerHeight;
 
+class Point {
+    x
+    y
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+class Rectangle {
+    lx
+    ty
+    rx
+    by
+
+    x
+    y
+    w
+    h
+
+    tl
+    tr
+    bl
+    br
+
+    static fromCorners(lx, ty, rx, by) {
+        return new Rectangle(lx, ty, rx, by);
+    }
+
+    static fromOriginAndDimensions(x, y, w, h) {
+        return new Rectangle(x, y, x + w, y + h);
+    }
+
+    constructor(lx, ty, rx, by) {
+        // system 1
+        this.lx = lx;
+        this.ty = ty;
+        this.rx = rx;
+        this.by = by;
+
+        // system 2
+        this.x = lx;
+        this.y = ty;
+        this.w = rx - lx;
+        this.h = by - ty;
+
+        // system 3
+        this._calculateCorners();
+    }
+
+    updateOrigin(lx, ty) {
+        this.lx = lx;
+        this.ty = ty;
+        this.rx = lx + this.w;
+        this.by = ty + this.h;
+
+        this.x = lx;
+        this.y = ty;
+
+        this._calculateCorners();
+    }
+
+    origin() {
+        return this.tl;
+    }
+
+    _calculateCorners() {
+        this.tl = new Point(this.lx, this.ty);
+        this.tr = new Point(this.rx, this.ty);
+        this.bl = new Point(this.lx, this.by);
+        this.br = new Point(this.rx, this.by);
+}
+
+    corners() {
+        return [this.tl, this.tr, this.bl, this.br];
+    }
+
+    centre() {
+        return new Point(this.x + (this.w / 2), this.y + (this.h / 2));
+    }
+
+    pointCollides(p) {
+        return ((this.lx <= p.x) && (p.x <= this.rx)) && ((this.ty <= p.y) && (p.y <= this.by));
+    }
+
+    rectCollides(r2) {
+        for (let corner of r2.corners()) {
+            if (this.pointCollides(corner)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+class Item {
+    name
+    rect
+
+    constructor(name, rect) {
+        this.name = name;
+        this.rect = rect;
+    }
+
+    getImageURL() {
+        return `assets/items/tinified/${this.name}.png`;
+    }
+}
+
+class Customer {
+    rect
+    movedir
+    desire
+
+    constructor(rect, desire) {
+        this.rect = rect;
+        this.desire = desire;
+        this.movedir = null;
+    }
+
+    move = () => {
+        // Randomize possible directions
+        let possibleDirections = [...directions];
+        Random.shuffle(possibleDirections);
+
+        // Move the customer's actual direction to the front of the list so they try that first
+        JSTools.removeFromArray(possibleDirections, this.movedir);
+        possibleDirections.splice(0, 0, this.movedir);
+
+        // Try all the directions
+        let x, y, rectCollider;
+        for (let md of possibleDirections) {
+            [x, y] = getXYFromMoveDirection(md, this.rect.lx, this.rect.ty);
+            rectCollider = rectForCustomer(x, y);
+
+            if (canMoveHere(rectCollider, this.rect)) {
+                this.rect.updateOrigin(x, y);
+                this.movedir = md;
+                return;
+            }
+        }
+
+        // No?
+        console.log('Customer was unable to move');
+    }
+}
+
+const items = [
+    new Item('broccoli', Rectangle.fromCorners(820, 525, 955, 595)),
+    new Item('cabbage', Rectangle.fromCorners(685, 420, 820, 490)),
+    new Item('cauliflower', Rectangle.fromCorners(415, 420, 550, 490)),
+    new Item('corn', Rectangle.fromCorners(820, 420, 955, 490)),
+    new Item('cucumber', Rectangle.fromCorners(550, 525, 685, 595)),
+    new Item('eggplant', Rectangle.fromCorners(415, 525, 550, 595)),
+    new Item('eggs', Rectangle.fromCorners(75, 395, 235, 550)),
+    new Item('mushroom', Rectangle.fromCorners(550, 420, 685, 490)),
+    new Item('potato', Rectangle.fromCorners(65, 165, 160, 265)),
+    new Item('tomato', Rectangle.fromCorners(685, 525, 820, 595)),
+    new Item('yam', Rectangle.fromCorners(160, 165, 255, 265)),
+    new Item('turnip', Rectangle.fromCorners(855, 190, 970, 245)),
+    new Item('pumpkin', Rectangle.fromCorners(715, 195, 785, 250)),
+    new Item('radish', Rectangle.fromCorners(450, 185, 525, 250)),
+    new Item('onion', Rectangle.fromCorners(780, 735, 850, 780)),
+    new Item('pepper', Rectangle.fromCorners(385, 725, 460, 790)),
+    new Item('garlic', Rectangle.fromCorners(590, 730, 655, 785)),
+    new Item('carrot', Rectangle.fromCorners(580, 180, 655, 255)),
+];
+
+var customers = [];
+
 const obstaclesFixed = [
-    [70, 70, 265, 260],
-    [290, 115, 365, 265],
-    [404, 80, 975, 305],
-    [65, 380, 235, 840],
-    [405, 425, 960, 650],
-    [360, 735, 980, 840],
-    [1115, 555, 1230, 840],
+    Rectangle.fromCorners(70, 70, 265, 260),
+    Rectangle.fromCorners(290, 115, 365, 265),
+    Rectangle.fromCorners(404, 80, 975, 305),
+    Rectangle.fromCorners(65, 380, 235, 840),
+    Rectangle.fromCorners(405, 425, 960, 650),
+    Rectangle.fromCorners(360, 735, 980, 840),
+    Rectangle.fromCorners(1115, 555, 1230, 840),
 ];
 
 const directions = [
@@ -18,17 +189,14 @@ const directions = [
     'ENE', 'WNW', 'ESE', 'WSW'
 ];
 
-const margin = 10;
-
-var customers = [];
-
 const helloSound = new Audio(src = "assets/hello-87032.mp3")
 
-const customerSize = 100;
+const margin = 10;
+const customerSize = 72;
 const customerSpeed = 2;
 const maxCustomers = 100;
 
-const customerSpawnRate = 250;
+const customerSpawnRate = 1_000;
 const refreshRate = 1_000 / 60;
 
 const canvasBG = $('#gameCanvas1').get(0);
@@ -84,36 +252,9 @@ const openGameScreen = () => {
 const getLiveObstacles = () => {
     let obstacles = [...obstaclesFixed];
     for (let c of customers) {
-        obstacles.push([c.x, c.y, c.x + customerSize, c.y + customerSize]);
+        obstacles.push(c.rect);
     }
     return obstacles;
-}
-
-const pointIsInRectangle = (p, r) => {
-    return ((r.lx <= p.x) && (p.x <= r.rx)) && ((r.ty <= p.y) && (p.y <= r.by));
-}
-
-const rectanglesCollide = (r1, r2) => {
-    let corners = [
-        [r2.lx, r2.ty],
-        [r2.rx, r2.ty],
-        [r2.lx, r2.by],
-        [r2.rx, r2.by],
-    ];
-
-    let point;
-    for (let corner of corners) {
-        point = {
-            x: corner[0],
-            y: corner[1]
-        }
-
-        if (pointIsInRectangle(point, r1)) {
-            return true;
-        }
-    }
-
-    return false;
 }
 
 const canMoveHere = (rc, ignoreRect) => {
@@ -132,21 +273,15 @@ const hasAnyCollision = (rectCollider, rectIgnore) => {
     let ignoreMode = (typeof rectIgnore !== 'undefined');
 
     let rectObstacle;
-    for (let o of getLiveObstacles()) {
-        rectObstacle = {
-            'lx': o[0],
-            'ty': o[1],
-            'rx': o[2],
-            'by': o[3]
-        }
+    for (let r2 of getLiveObstacles()) {
 
         // Skip a rectangle being ignored
-        if (ignoreMode && (JSON.stringify(rectObstacle) === JSON.stringify(rectIgnore))) {
+        if (ignoreMode && (JSON.stringify(r2) === JSON.stringify(rectIgnore))) {
             continue;
         }
 
         // Check collision
-        if (rectanglesCollide(rectObstacle, rectCollider)) {
+        if (r2.rectCollides(rectCollider)) {
             return true;
         }
     }
@@ -154,31 +289,8 @@ const hasAnyCollision = (rectCollider, rectIgnore) => {
     return false;
 };
 
-const rectFromCorners = (lx, ty, rx, by) => {
-    return {
-        'lx': lx,
-        'ty': ty,
-        'rx': rx,
-        'by': by
-    };
-}
-
-const rectFromCornerAndWH = (lx, ty, w, h) => {
-    return {
-        'lx': lx,
-        'ty': ty,
-        'rx': lx + w,
-        'by': ty + h
-    };
-}
-
 const rectForCustomer = (x, y) => {
-    return {
-        'lx': x,
-        'ty': y,
-        'rx': x + customerSize,
-        'by': y + customerSize
-    };
+    return Rectangle.fromCorners(x, y, x + customerSize, y + customerSize);
 }
 
 const spawnCustomer = () => {
@@ -188,17 +300,21 @@ const spawnCustomer = () => {
 
     let nAttempts = 0;
 
-    let x = Random.integer(margin, vW - customerSize - margin);
-    let y = Random.integer(margin, vH - customerSize - margin);
+    let x = Random.integer(margin + 5, vW - (customerSize * 2) - margin);
+    let y = Random.integer(margin + 5, vH - (customerSize * 2) - margin - 5);
+    let r = rectForCustomer(x, y);
 
-    while ((nAttempts < 10) && (hasAnyCollision(rectForCustomer(x, y)))) {
-        left = Random.integer(margin, vW - customerSize - margin);
-        top = Random.integer(margin, vH - customerSize - margin);
+    while ((nAttempts < 10) && (hasAnyCollision(r))) {
+        x = Random.integer(margin + 5, vW - (customerSize * 2) - margin - 5);
+        y = Random.integer(margin + 5, vH - (customerSize * 2) - margin - 5);
+        r = rectForCustomer(x, y);
         nAttempts++;
     }
 
     if (nAttempts < 10) {
-        customers.push({x: x, y: y, movedir: Random.choice(directions)});
+        let c = new Customer(r);
+        c.movedir = Random.choice(directions);
+        customers.push(c);
     }
 }
 
@@ -221,7 +337,7 @@ const getXYFromMoveDirection = (md, x, y) => {
     } else if (md === 'SW') {
         return [x - customerSpeed, y + customerSpeed];
 
-    }  else if (md === 'NNE') {
+    } else if (md === 'NNE') {
         return [x + customerSpeed / 2, y - customerSpeed];
     } else if (md === 'NNW') {
         return [x - customerSpeed / 2, y - customerSpeed];
@@ -229,9 +345,7 @@ const getXYFromMoveDirection = (md, x, y) => {
         return [x + customerSpeed / 2, y + customerSpeed];
     } else if (md === 'SSW') {
         return [x - customerSpeed / 2, y + customerSpeed];
-    }
-
-      else if (md === 'ENE') {
+    } else if (md === 'ENE') {
         return [x + customerSpeed, y - customerSpeed / 2];
     } else if (md === 'WNW') {
         return [x - customerSpeed, y - customerSpeed / 2];
@@ -242,39 +356,9 @@ const getXYFromMoveDirection = (md, x, y) => {
     }
 }
 
-const moveCustomer = (customer) => {
-    // Randomize possible directions
-    let possibleDirections = [...directions];
-    Random.shuffle(possibleDirections);
-
-    // Move the customer's actual direction to the front of the list so they try that first
-    JSTools.removeFromArray(possibleDirections, customer.movedir);
-    possibleDirections.splice(0, 0, customer.movedir);
-
-    // Create a rectangle representing our current position to ignore for collision
-    let ownRect = rectForCustomer(customer.x, customer.y);
-
-    // Try all the directions
-    let x, y, rectCollider;
-    for (let md of possibleDirections) {
-        [x, y] = getXYFromMoveDirection(md, customer.x, customer.y);
-        rectCollider  = rectForCustomer(x, y);
-
-        if (canMoveHere(rectCollider, ownRect)) {
-            customer.x = x;
-            customer.y = y;
-            customer.movedir = md;
-            return;
-        }
-    }
-
-    // No?
-    console.log('Customer was unable to move');
-}
-
 const updateGame = () => {
     for (let customer of customers) {
-        moveCustomer(customer);
+        customer.move();
     }
 
     drawGame();
@@ -283,8 +367,21 @@ const updateGame = () => {
 const drawGame = () => {
     ctxCustomers.clearRect(0, 0, vW, vH);
     for (let c of customers) {
-        ctxCustomers.drawImage(imgCustomer, c.x, c.y, customerSize, customerSize);
+        ctxCustomers.drawImage(imgCustomer, c.rect.x, c.rect.y, c.rect.w, c.rect.h);
     }
+}
+
+function getMousePosOnCanvas(canvas, e) {
+    let rect = canvas.getBoundingClientRect();
+    return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+    };
+}
+
+function handleCanvasClick(e) {
+    let pos = getMousePosOnCanvas(e.target, e);
+    console.log(pos);
 }
 
 const showMousePos = (e) => {
