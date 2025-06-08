@@ -316,17 +316,17 @@ class Customer {
     }
 
     highlight = () => {
-        ctxCustomers.beginPath();
-        ctxCustomers.arc(this.rect.centre().x, this.rect.centre().y, (customerSize / 2), 0, 2 * Math.PI);
-        ctxCustomers.lineWidth = 4;
+        ctxCustomerInfo.beginPath();
+        ctxCustomerInfo.arc(this.rect.centre().x, this.rect.centre().y, (customerSize / 2), 0, 2 * Math.PI);
+        ctxCustomerInfo.lineWidth = 4;
 
         if (this.foodIsSuitable()) {
-            ctxCustomers.strokeStyle = "white";
+            ctxCustomerInfo.strokeStyle = "white";
         } else {
-            ctxCustomers.strokeStyle = "red";
+            ctxCustomerInfo.strokeStyle = "red";
         }
 
-        ctxCustomers.stroke();
+        ctxCustomerInfo.stroke();
     }
 }
 
