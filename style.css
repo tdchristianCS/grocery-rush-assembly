@@ -111,3 +111,7 @@ button:hover::before {
 #gameCanvas3 {
     z-index: 3;
 }
+
+.pointer {
+    cursor: pointer;
+}

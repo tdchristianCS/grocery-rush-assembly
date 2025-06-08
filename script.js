@@ -113,12 +113,14 @@ class Item {
 
 class Customer {
     rect
-    movedir
     desire
+    state // 0 = shopping, 1 = satisfied
+    movedir
 
     constructor(rect, desire) {
         this.rect = rect;
         this.desire = desire;
+        this.state = 0;
         this.movedir = null;
     }
 
@@ -135,7 +137,7 @@ class Customer {
         let x, y, rectCollider;
         for (let md of possibleDirections) {
             [x, y] = getXYFromMoveDirection(md, this.rect.lx, this.rect.ty);
-            rectCollider = rectForCustomer(x, y);
+            rectCollider = Rectangle.fromOriginAndDimensions(x, y, customerSize, customerSize);
 
             if (canMoveHere(rectCollider, this.rect)) {
                 this.rect.updateOrigin(x, y);
@@ -258,7 +260,6 @@ const getLiveObstacles = () => {
 }
 
 const canMoveHere = (rc, ignoreRect) => {
-
     return [
         rc.lx > margin,
         rc.ty > margin,
@@ -272,7 +273,6 @@ const hasAnyCollision = (rectCollider, rectIgnore) => {
     // Tiny optimization
     let ignoreMode = (typeof rectIgnore !== 'undefined');
 
-    let rectObstacle;
     for (let r2 of getLiveObstacles()) {
 
         // Skip a rectangle being ignored
@@ -289,10 +289,6 @@ const hasAnyCollision = (rectCollider, rectIgnore) => {
     return false;
 };
 
-const rectForCustomer = (x, y) => {
-    return Rectangle.fromCorners(x, y, x + customerSize, y + customerSize);
-}
-
 const spawnCustomer = () => {
     if (customers.length >= maxCustomers) {
         return;
@@ -302,12 +298,12 @@ const spawnCustomer = () => {
 
     let x = Random.integer(margin + 5, vW - (customerSize * 2) - margin);
     let y = Random.integer(margin + 5, vH - (customerSize * 2) - margin - 5);
-    let r = rectForCustomer(x, y);
+    let r = Rectangle.fromOriginAndDimensions(x, y, customerSize, customerSize);
 
     while ((nAttempts < 10) && (hasAnyCollision(r))) {
         x = Random.integer(margin + 5, vW - (customerSize * 2) - margin - 5);
         y = Random.integer(margin + 5, vH - (customerSize * 2) - margin - 5);
-        r = rectForCustomer(x, y);
+        r = Rectangle.fromOriginAndDimensions(x, y, customerSize, customerSize);
         nAttempts++;
     }
 
@@ -373,25 +369,78 @@ const drawGame = () => {
 
 function getMousePosOnCanvas(canvas, e) {
     let rect = canvas.getBoundingClientRect();
-    return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-    };
+    return new Point(e.clientX - rect.left, e.clientY - rect.top);
 }
 
-function handleCanvasClick(e) {
-    let pos = getMousePosOnCanvas(e.target, e);
-    console.log(pos);
+function pointingAtItem(p) {
+    for (let item of items) {
+        if (item.rect.pointCollides(p)) {
+            return item;
+        }
+    }
 }
 
-const showMousePos = (e) => {
-    console.log(e.clientX, e.clientY);
+function pointingAtCustomer(p) {
+    for (let c of customers) {
+        if (c.rect.pointCollides(p)) {
+            return c;
+        }
+    }
 }
 
-// $('body').mousemove(showMousePos);
+function setCursor(url, xOffset, yOffset) {
+    $('#gameCanvas3').css('cursor', `url("${url}") ${xOffset} ${yOffset}, pointer`);
+}
+
+function resetCursor() {
+    $('#gameCanvas3').css('cursor', 'auto');
+}
+
+function handleCanvasMouseMove(e) {
+    let p = getMousePosOnCanvas(e.target, e);
+
+    if (! carrying) {
+        if (pointingAtItem(p)) {
+            setCursor("assets/pluck.png", 32, 22);
+        } else {
+            resetCursor();
+        }
+    }
+}
+
+function handleCanvasMousedown(e) {
+    let p = getMousePosOnCanvas(e.target, e);
+    if (! carrying) {
+        if (pointingAtItem(p)) {
+            setCursor("assets/pinch.png", 32, 22);
+        } else {
+            resetCursor();
+        }
+    }
+}
+
+function handleCanvasMouseup(e) {
+    let p = getMousePosOnCanvas(e.target, e);
+    if (! carrying) {
+        let item = pointingAtItem(p);
+        if (item) {
+            setCursor(item.getImageURL(), 0, 0);
+            carrying = item;
+        } else {
+            resetCursor();
+        }
+
+    } else {
+        let c = pointingAtCustomer(p);
+        if (c) {
+            c.state = 1;
+            JSTools.removeFromArray(customers, c);
+            carrying = null;
+        }
+    }
+}
 
 const useMusic = () => {
-    // console.log("Sound Succesfull");
     backgroundMusic.play();
 };
 
@@ -401,9 +450,6 @@ const handleVolumeUpdate = (e) => {
     backgroundMusic.volume = value / 100;
     musicLastVolume = value / 100;
 }
-$(document).ready(function () {
-    $('#volume').change(handleVolumeUpdate);
-});
 
 const toggleMuteMusic = () => {
     if (musicIsMuted) {
@@ -418,10 +464,25 @@ const toggleMuteMusic = () => {
 }
 
 //Runs the code
-$("#play-button").click(useMusic)
-$('#muteSound').click(toggleMuteMusic);
-$("#play-button").click(openGameScreen);
 
+const bind = () => {
+    $("#play-button").click(useMusic)
+    $('#muteSound').click(toggleMuteMusic);
+    $("#play-button").click(openGameScreen);
+
+    $('#volume').change(handleVolumeUpdate);
+
+    $('#gameCanvas3').mousemove(handleCanvasMouseMove);
+    $('#gameCanvas3').mousedown(handleCanvasMousedown);
+    $('#gameCanvas3').mouseup(handleCanvasMouseup);
+}
+
+const init = () => {
+    bind();
+}
 
 var spawnInterval;
 var refreshInterval;
+var carrying = null;
+
+$(document).ready(init);
