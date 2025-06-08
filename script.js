@@ -447,7 +447,8 @@ const openGameScreen = () => {
     ctxBG.drawImage(imgBG, 0, 0, vW, vH);
     ctxStore.drawImage(imgStore, 0, 0, vW, vH);
     ctxStore.drawImage(imgTrash, 1350, 800, 60, 80);
-    spawnInterval = setInterval(spawnCustomer, customerSpawnRate);
+
+    spawnTimeout = setTimeout(spawnCustomer, customerSpawnRate);
     refreshInterval = setInterval(updateGame, refreshRate);
 
     gameState = 1;
@@ -518,6 +519,9 @@ const spawnCustomer = () => {
         c.movedir = Random.choice(directions);
         customers.push(c);
     }
+
+    // Manually set the next one so that we can change the interval
+    spawnTimeout = setTimeout(spawnCustomer, customerSpawnRate);
 }
 
 const getXYFromMoveDirection = (md, x, y) => {
@@ -631,6 +635,12 @@ const updateDifficulty = () => {
     // increase patience drain rate
     if (patienceDrainRate < maxPatienceDrainRate) {
         patienceDrainRate += patienceDrainRateIncrement;
+    }
+
+    // increase customer spawn rate
+    // Note that it is reversed... it approaches the "maximum"
+    if (customerSpawnRate > fastestCustomerSpawnRate) {
+        customerSpawnRate -= customerSpawnRateIncrement;
     }
 }
 
@@ -815,15 +825,18 @@ const init = () => {
 }
 
 // intervals
-var spawnInterval;
-var refreshInterval;
+var refreshInterval = null;
+var spawnTimeout = null;
 
 // mutable game variables
 var carrying = null;
 var reviews = [];
+
 var desireChance = minDesireChance;
 var customerSpeed = minCustomerSpeed;
 var patienceDrainRate = minPatienceDrainRate; // per frame
+var customerSpawnRate = slowestCustomerSpawnRate;
+
 var gameState = 0; // 0 = not started, 1 = playing, 2 = paused, 3 = ended
 var lastSeenMousePos = null;
 
