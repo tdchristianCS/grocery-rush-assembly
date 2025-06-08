@@ -361,7 +361,7 @@ const maxCustomerSpeed = 3;
 const customerSpeedIncrement = 0.01;
 
 const minDesireChance = 33;
-const maxDesireChance = 70;
+const maxDesireChance = 90;
 const desireChanceIncrement = 0.5;
 
 const customerSpawnRate = 1_000;
@@ -677,7 +677,7 @@ function handleCanvasMouseup(e) {
     if (!carrying) {
         let item = pointingAtItem(p);
         if (item) {
-            setCursor(item.getImageURL(), 24, 24);
+            setCursor(item.getImageURL(), 0, 0);
             carrying = item;
         }
 
