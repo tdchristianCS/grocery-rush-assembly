@@ -128,20 +128,30 @@ class Item {
 class Customer {
     rect
     desire
-    state // 0 = shopping, 1 = satisfied
+    state // 0 = shopping, 1 = satisfied, 2 = angry
     movedir
+    patience
 
     constructor(rect, desire) {
         this.rect = rect;
         this.desire = desire;
         this.state = 0;
         this.movedir = null;
+        this.patience = maxPatience;
+    }
+
+    updatePatience = () => {
+        this.patience -= patienceDrainRate;
+        if (this.patience <= 0) {
+            this.state = 2;
+        }
     }
 
     move = () => {
         if (this.state === 0) {
             this.moveRandomly();
-        } else {
+        } else if ((this.state === 1) || (this.state === 2)) {
+            // 1 or 2
             this.moveTowardsExit();
         }
     }
@@ -249,6 +259,8 @@ const margin = 10;
 const customerSize = 72;
 const customerSpeed = 2;
 const maxCustomers = 100;
+const maxPatience = 1_800;
+const patienceDrainRate = 1; // per frame
 
 const customerSpawnRate = 1_000;
 const refreshRate = 1_000 / 60;
@@ -410,8 +422,11 @@ const getXYFromMoveDirection = (md, x, y) => {
     }
 }
 
+const calculateStore = () => {}
+
 const updateGame = () => {
     for (let customer of customers) {
+        customer.updatePatience();
         customer.move();
     }
 
@@ -565,5 +580,6 @@ const init = () => {
 var spawnInterval;
 var refreshInterval;
 var carrying = null;
+var reviews = [];
 
 $(document).ready(init);
