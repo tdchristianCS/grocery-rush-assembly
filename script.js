@@ -193,7 +193,8 @@ class Customer {
             } else if (this.patience < (0.1 * maxPatience)) {
                 return 1;
             } else {
-                return 1 + Math.round(((this.patience / maxPatience) * 4) * 10) / 10;
+                // return 1 + Math.round(((this.patience / maxPatience) * 4) * 10) / 10;
+                return 1 + Math.round((this.patience / maxPatience) * 4);
             }
         }
     }
@@ -340,7 +341,7 @@ class ReviewMarker {
     constructor(x, y, value) {
         this.x = x;
         this.y = y;
-        this.value = formatNumber(value);
+        this.value = value;
 
         this.slatedToDestroy = false;
         this.timeout = setTimeout(() => {
@@ -349,10 +350,10 @@ class ReviewMarker {
     }
 
     draw() {
-        let text = `${this.value} ⭐`;
+        let text = `${this.value}⭐`;
 
         ctxUI.fillStyle = "white";
-        ctxUI.fillRect(this.x - 5, this.y - 20, 70, 28);
+        ctxUI.fillRect(this.x - 5, this.y - 22, 50, 29);
 
         ctxUI.fillStyle = "black";
         ctxUI.font = "22px Segoe UI";
@@ -819,7 +820,7 @@ function resetCursor() {
 function updateCursor() {
     let p = lastSeenMousePos;
     if (! p) { return; }
-    if (gameState === 2) {
+    if (gameState !== 1) {
         return;
     }
 
@@ -848,7 +849,7 @@ function handleCanvasMouseMove(e) {
 }
 
 function handleCanvasMouseup(e) {
-    if (gameState === 2) {
+    if (gameState !== 1) {
         return;
     }
 
