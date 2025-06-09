@@ -490,19 +490,41 @@ const showSettings = () => {
     show($('#settings'));
 }
 
-const playGame = () => {
+const setStartValues = () => {
+    customers.length = 0;
+    reviewMarkers.length = 0;
+    reviews.length = 0;
+    carrying = null;
+
+    desireChance = minDesireChance;
+    customerSpeed = minCustomerSpeed;
+    patienceDrainRate = minPatienceDrainRate; // per frame
+    customerSpawnRate = slowestCustomerSpawnRate;
+}
+
+const startGame = () => {
+    gameState = 1;
+
     hide($('#startScreen'));
     show($('#gameScreen'));
-    startMusic();
 
-    ctxBG.drawImage(imgBG, 0, 0, vW, vH);
-    ctxStore.drawImage(imgStore, 0, 0, vW, vH);
-    ctxStore.drawImage(imgTrash, 1350, 800, 60, 80);
+    show($('#play-button'));
+    hide($('#pause-button'));
+    hide($('#resume-button'));
+
+    for (let ctx of [ctxStore, ctxBG, ctxCustomers, ctxCustomerInfo, ctxUI]) {
+        ctx.clearRect(0, 0, vW, vH);
+    }
+
+    clearTimeout(spawnTimeout);
+    clearInterval(refreshInterval);
+    clearInterval(tickInterval);
+
+    drawStaticElements();
+    setStartValues();
 
     spawnTimeout = setTimeout(spawnCustomer, customerSpawnRate);
     refreshInterval = setInterval(updateGame, refreshRate);
-
-    gameState = 1;
 
     if ($('#timedMode').prop('checked')) {
         remainingSeconds = $('#timeAllowed').val();
@@ -510,21 +532,71 @@ const playGame = () => {
     }
 };
 
-function stop() {
-    gameState = 3;
-    stopTicking();
+const pauseGame = () => {
+    if (gameState === 1) {
+        gameState = 2;
+    }
+
+    hide($('#gameScreen'));
+    show($('#startScreen'));
+
+    hide($('#play-button'));
+    show($('#resume-button'));
+    show($('#restart-button'));
+
+    clearTimeout(spawnTimeout);
+    clearInterval(refreshInterval);
+    clearInterval(tickInterval);
 }
 
-function stopTicking() {
+const resumeGame = () => {
+    if (gameState === 2) {
+        gameState = 1;
+    }
+
+    hide($('#startScreen'));
+    show($('#gameScreen'));
+
+    show($('#play-button'));
+    hide($('#resume-button'));
+    hide($('#restart-button'));
+
+    drawStaticElements();
+
+    spawnTimeout = setTimeout(spawnCustomer, customerSpawnRate);
+    refreshInterval = setInterval(updateGame, refreshRate);
+
+    if ($('#timedMode').prop('checked')) {
+        tickInterval = setInterval(tick, 1_000);
+    }
+}
+
+function restartGame() {
+    startGame();
+}
+
+function stopGame() {
+    gameState = 3;
+
+    clearTimeout(spawnTimeout);
+    // clearInterval(refreshInterval);
     clearInterval(tickInterval);
-    // remainingSeconds = $('#timeAllowed').val();
+}
+
+function exitGame() {
+    hide($('#gameScreen'));
+    show($('#startScreen'));
+
+    show($('#play-button'));
+    hide($('#resume-button'));
+    hide($('#restart-button'));
 }
 
 function tick() {
     if (gameState === 1) {
         remainingSeconds -= 1;
         if (remainingSeconds === 0) {
-            stop();
+            stopGame();
         }
     }
 }
@@ -685,6 +757,12 @@ const drawUI = () => {
     drawTimer();
 }
 
+const drawStaticElements = () => {
+    ctxBG.drawImage(imgBG, 0, 0, vW, vH);
+    ctxStore.drawImage(imgStore, 0, 0, vW, vH);
+    ctxStore.drawImage(imgTrash, 1350, 800, 60, 80);
+}
+
 const drawReviewMarkers = () => {
     for (let rm of reviewMarkers) {
         rm.draw();
@@ -721,6 +799,13 @@ const drawEnded = () => {
         ctxUI.fillStyle = "white";
         ctxUI.font = "60px quokka";
         ctxUI.fillText("FINISHED", 590, 396);
+
+        ctxUI.fillStyle = "black";
+        ctxUI.fillRect(540, 660, 320, 60);
+
+        ctxUI.fillStyle = "white";
+        ctxUI.font = "60px quokka";
+        ctxUI.fillText("ESC TO QUIT", 560, 707);
     }
 }
 
@@ -876,7 +961,10 @@ function handleCanvasMouseup(e) {
 }
 
 const startMusic = () => {
-    backgroundMusic.play();
+    if (! musicStarted) {
+        musicStarted = true;
+        backgroundMusic.play();
+    }
 };
 
 const handleVolumeUpdate = (e) => {
@@ -905,11 +993,13 @@ const toggleMuteMusic = (e) => {
 }
 
 const handleKeyup = (e) => {
-    if (e.code === "Space") {
+    if (e.code === "Escape") {
         if (gameState === 1) {
-            gameState = 2;
+            pauseGame();
         } else if (gameState === 2) {
-            gameState = 1;
+            resumeGame();
+        } else if (gameState === 3) {
+            exitGame();
         }
     }
 }
@@ -930,7 +1020,9 @@ function handleTimeAllowedChange(e) {
 }
 
 const bind = () => {
-    $("#play-button").click(playGame);
+    $("#play-button").click(startGame);
+    $("#resume-button").click(resumeGame);
+    $("#restart-button").click(restartGame);
     $("#instructions-button").click(showInstructions);
     $("#settings-button").click(showSettings);
     $(".back-button").click(showWelcome);
@@ -948,6 +1040,7 @@ const bind = () => {
     $('#timeAllowed').keyup(handleTimeAllowedChange);
 
     $(document).keyup(handleKeyup);
+    $(document).click(startMusic);
 }
 
 const init = () => {
@@ -965,8 +1058,8 @@ var spawnTimeout = null;
 var tickInterval = null;
 
 // mutable game variables
-var carrying = null;
 var reviews = [];
+var carrying = null;
 
 var desireChance = minDesireChance;
 var customerSpeed = minCustomerSpeed;
@@ -976,5 +1069,7 @@ var customerSpawnRate = slowestCustomerSpawnRate;
 var gameState = 0; // 0 = not started, 1 = playing, 2 = paused, 3 = ended
 var lastSeenMousePos = null;
 var remainingSeconds = 60;
+
+var musicStarted = false;
 
 $(document).ready(init);
