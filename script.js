@@ -794,18 +794,18 @@ const drawPaused = () => {
 const drawEnded = () => {
     if (gameState === 3) {
         ctxUI.fillStyle = "black";
-        ctxUI.fillRect(560, 350, 280, 60);
+        ctxUI.fillRect(550, 350, 280, 60);
 
         ctxUI.fillStyle = "white";
         ctxUI.font = "60px quokka";
-        ctxUI.fillText("FINISHED", 590, 396);
+        ctxUI.fillText("FINISHED", 580, 396);
 
         ctxUI.fillStyle = "black";
-        ctxUI.fillRect(540, 660, 320, 60);
+        ctxUI.fillRect(440, 660, 500, 60);
 
         ctxUI.fillStyle = "white";
         ctxUI.font = "60px quokka";
-        ctxUI.fillText("ESC TO QUIT", 560, 707);
+        ctxUI.fillText("SPACE/ESC TO QUIT", 460, 707);
     }
 }
 
@@ -993,7 +993,7 @@ const toggleMuteMusic = (e) => {
 }
 
 const handleKeyup = (e) => {
-    if (e.code === "Escape") {
+    if ((e.code === "Escape") || (e.code === "Space")) {
         if (gameState === 1) {
             pauseGame();
         } else if (gameState === 2) {
