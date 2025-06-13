@@ -170,11 +170,11 @@ class Customer {
     give = () => {
         if (this.foodIsSuitable()) {
             this.state = 1;
-            meowHappy.play();
+            jukebox.play("meow-happy");
             updateDifficulty();
         } else {
             this.state = 2;
-            meowAngry.play();
+            jukebox.play("meow-angry");
         }
 
         this.leaveReview();
@@ -212,7 +212,7 @@ class Customer {
             this.patience -= patienceDrainRate;
             if (this.patience <= 0) {
                 this.state = 2;
-                meowBored.play();
+                jukebox.play("meow-bored");
                 this.leaveReview();
             }
         }
@@ -457,18 +457,6 @@ const imgCustomerGlad = new Image();
 imgCustomerGlad.src = 'assets/customer-glad.png';
 imgCustomerGlad.width = 500;
 imgCustomerGlad.height = 450;
-
-const backgroundMusic = new Audio(
-    "assets/music.mp3"
-); // Music by Krzysztof Szymanski sourced from Pixaby
-backgroundMusic.loop = true;
-
-backgroundMusic.volume = 0.5;
-meowHappy.volume = 0.5;
-meowAngry.volume = 0.5;
-meowBored.volume = 0.5;
-
-let audioLastVolume = backgroundMusic.volume;
 
 const hide = (el) => {
     el.addClass('hide');
@@ -972,7 +960,7 @@ function handleCanvasMouseup(e) {
 const startMusic = () => {
     if (! musicStarted) {
         musicStarted = true;
-        backgroundMusic.play();
+        jukebox.play("music");
     }
 };
 
@@ -980,32 +968,20 @@ const handleVolumeUpdate = (e) => {
     let value = parseInt(e.target.value);
     $('#volume-display').text(value);
 
-    backgroundMusic.volume = value / 100;
-    meowHappy.volume = value / 100;
-    meowAngry.volume = value / 100;
-    meowBored.volume = value / 100;
-    audioLastVolume = value / 100;
+    jukebox.volume(value);
 }
 
 const toggleMuteMusic = (e) => {
     if ($(e.target).prop('checked')) {
-
-        backgroundMusic.volume = 0;
-        meowHappy.volume = 0;
-        meowAngry.volume = 0;
-        meowBored.volume = 0;
+        jukebox.mute();
         $('#volume').val(0);
         $('#volume-display').text(0);
         $('#volume').prop('disabled', true);
 
     } else {
-
-        backgroundMusic.volume = audioLastVolume;
-        meowHappy.volume = audioLastVolume;
-        meowAngry.volume = audioLastVolume;
-        meowBored.volume = audioLastVolume;
-        $('#volume').val(backgroundMusic.volume * 100);
-        $('#volume-display').text(musicLastVolume * 100);
+        jukebox.unmute();
+        $('#volume').val(jukebox.volume());
+        $('#volume-display').text(jukebox.volume());
         $('#volume').prop('disabled', false);
     }
 }
@@ -1063,7 +1039,7 @@ const bind = () => {
 
 const addJukeboxSounds = () => {
     jukebox.addByURL("music", "assets/music.mp3");
-    jukebox.volume(50);
+    jukebox.volume(25);
 }
 
 const init = () => {
@@ -1071,8 +1047,8 @@ const init = () => {
     addJukeboxSounds();
 
     $('#mute').prop('checked', false);
-    $('#volume').val(backgroundMusic.volume * 100);
-    $('#volume-display').text(audioLastVolume * 100);
+    $('#volume').val(jukebox.volume());
+    $('#volume-display').text(jukebox.volume());
     $('#volume').prop('disabled', false);
 }
 

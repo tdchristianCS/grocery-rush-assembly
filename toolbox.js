@@ -617,6 +617,13 @@ class Jukebox {
     }
   }
 
+  loop(key) {
+    if (!this.disabled) {
+      this.sounds[key].loop = true;
+      this.sounds[key].play();
+    }
+  }
+
   pause(key) {
     if (!this.disabled) {
       this.sounds[key].pause();
@@ -627,11 +634,26 @@ class Jukebox {
     if (!this.disabled) {
       this.sounds[key].pause();
       this.sounds[key].currentTime = 0;
+      this.sounds[key].loop = false;
     }
   }
 
   disable(value) {
     this.disabled = value;
+  }
+
+  setAllVolumes(value) {
+    for (let k in this.sounds) {
+      this.sounds[k].volume = value / 100;
+    }
+  }
+
+  mute() {
+    this.setAllVolumes(0);
+  }
+
+  unmute() {
+    this.setAllVolumes(this.savedVolume);
   }
 
   volume(value) {
@@ -642,9 +664,7 @@ class Jukebox {
     } else {
       // set
       this.savedVolume = value;
-      for (let k in this.sounds) {
-        this.sounds[k].volume = this.savedVolume / 100;
-      }
+      this.setAllVolumes(value);
     }
   }
 }
