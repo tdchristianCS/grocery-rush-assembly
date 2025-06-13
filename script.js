@@ -960,7 +960,7 @@ function handleCanvasMouseup(e) {
 const startMusic = () => {
     if (! musicStarted) {
         musicStarted = true;
-        jukebox.play("music");
+        jukebox.loop("music");
     }
 };
 
@@ -971,7 +971,7 @@ const handleVolumeUpdate = (e) => {
     jukebox.volume(value);
 }
 
-const toggleMuteMusic = (e) => {
+const toggleMute = (e) => {
     if ($(e.target).prop('checked')) {
         jukebox.mute();
         $('#volume').val(0);
@@ -1021,7 +1021,7 @@ const bind = () => {
     $("#settings-button").click(showSettings);
     $(".back-button").click(showWelcome);
 
-    $('#mute').change(toggleMuteMusic);
+    $('#mute').change(toggleMute);
     $('#volume').change(handleVolumeUpdate);
     $('#volume').mousemove(handleVolumeUpdate);
 
@@ -1039,6 +1039,9 @@ const bind = () => {
 
 const addJukeboxSounds = () => {
     jukebox.addByURL("music", "assets/music.mp3");
+    jukebox.addByURL("meow-happy", "assets/sounds/meow-happy.mp3");
+    jukebox.addByURL("meow-angry", "assets/sounds/meow-angry.mp3");
+    jukebox.addByURL("meow-bored", "assets/sounds/meow-bored.mp3");
     jukebox.volume(25);
 }
 
