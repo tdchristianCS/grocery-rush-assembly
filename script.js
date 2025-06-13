@@ -1061,12 +1061,18 @@ const bind = () => {
     $(document).click(startMusic);
 }
 
+const addJukeboxSounds = () => {
+    jukebox.addByURL("music", "assets/music.mp3");
+    jukebox.volume(50);
+}
+
 const init = () => {
     bind();
+    addJukeboxSounds();
 
     $('#mute').prop('checked', false);
     $('#volume').val(backgroundMusic.volume * 100);
-    $('#volume-display').text(musicLastVolume * 100);
+    $('#volume-display').text(audioLastVolume * 100);
     $('#volume').prop('disabled', false);
 }
 
@@ -1089,5 +1095,6 @@ var lastSeenMousePos = null;
 var remainingSeconds = 60;
 
 var musicStarted = false;
+var jukebox = new Jukebox();
 
 $(document).ready(init);
