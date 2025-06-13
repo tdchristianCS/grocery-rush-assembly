@@ -170,12 +170,14 @@ class Customer {
     give = () => {
         if (this.foodIsSuitable()) {
             this.state = 1;
+            meowHappy.play();
+            updateDifficulty();
         } else {
             this.state = 2;
+            meowAngry.play();
         }
 
         this.leaveReview();
-        updateDifficulty();
     }
 
     getReview = () => {
@@ -210,6 +212,7 @@ class Customer {
             this.patience -= patienceDrainRate;
             if (this.patience <= 0) {
                 this.state = 2;
+                meowBored.play();
                 this.leaveReview();
             }
         }
@@ -406,7 +409,9 @@ const directions = [
     'ENE', 'WNW', 'ESE', 'WSW'
 ];
 
-const helloSound = new Audio(src = "assets/hello-87032.mp3")
+const meowHappy = new Audio("");
+const meowAngry = new Audio("");
+const meowBored = new Audio("");
 
 const canvasBG = $('#gameCanvas1').get(0);
 const ctxBG = canvasBG.getContext('2d');
@@ -457,9 +462,13 @@ const backgroundMusic = new Audio(
     "assets/music.mp3"
 ); // Music by Krzysztof Szymanski sourced from Pixaby
 backgroundMusic.loop = true;
-backgroundMusic.volume = 0.5;
 
-let musicLastVolume = backgroundMusic.volume;
+backgroundMusic.volume = 0.5;
+meowHappy.volume = 0.5;
+meowAngry.volume = 0.5;
+meowBored.volume = 0.5;
+
+let audioLastVolume = backgroundMusic.volume;
 
 const hide = (el) => {
     el.addClass('hide');
@@ -972,20 +981,29 @@ const handleVolumeUpdate = (e) => {
     $('#volume-display').text(value);
 
     backgroundMusic.volume = value / 100;
-    musicLastVolume = value / 100;
+    meowHappy.volume = value / 100;
+    meowAngry.volume = value / 100;
+    meowBored.volume = value / 100;
+    audioLastVolume = value / 100;
 }
 
 const toggleMuteMusic = (e) => {
     if ($(e.target).prop('checked')) {
 
         backgroundMusic.volume = 0;
+        meowHappy.volume = 0;
+        meowAngry.volume = 0;
+        meowBored.volume = 0;
         $('#volume').val(0);
         $('#volume-display').text(0);
         $('#volume').prop('disabled', true);
 
     } else {
 
-        backgroundMusic.volume = musicLastVolume;
+        backgroundMusic.volume = audioLastVolume;
+        meowHappy.volume = audioLastVolume;
+        meowAngry.volume = audioLastVolume;
+        meowBored.volume = audioLastVolume;
         $('#volume').val(backgroundMusic.volume * 100);
         $('#volume-display').text(musicLastVolume * 100);
         $('#volume').prop('disabled', false);
